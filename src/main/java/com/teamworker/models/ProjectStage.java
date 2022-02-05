@@ -11,6 +11,7 @@ public class ProjectStage {
 
     @Id
     @Column(name = "project_stage_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "project_stage_name")

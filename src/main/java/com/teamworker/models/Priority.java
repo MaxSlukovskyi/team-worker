@@ -11,6 +11,7 @@ public class Priority {
 
     @Id
     @Column(name = "priority_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "column_name")

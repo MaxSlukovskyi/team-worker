@@ -11,6 +11,7 @@ public class ProjectType {
 
     @Id
     @Column(name = "project_type_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "project_type_name")

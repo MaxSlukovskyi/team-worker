@@ -11,6 +11,7 @@ public class TaskStage {
 
     @Id
     @Column(name = "task_stage_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "task_stage_name")

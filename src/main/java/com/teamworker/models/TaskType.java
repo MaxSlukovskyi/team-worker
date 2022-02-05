@@ -11,6 +11,7 @@ public class TaskType {
 
     @Id
     @Column(name = "task_type_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "task_type_name")
