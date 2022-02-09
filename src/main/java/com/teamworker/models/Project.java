@@ -4,8 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity
@@ -34,8 +33,8 @@ public class Project {
     ProjectType projectType;
 
     @ManyToMany(mappedBy = "projects")
-    private Set<User> users = new HashSet<>();
+    private List<User> users;
 
     @OneToMany(mappedBy = "project")
-    private Set<Task> tasks;
+    private List<Task> tasks;
 }

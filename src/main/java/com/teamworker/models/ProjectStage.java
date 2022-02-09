@@ -3,7 +3,7 @@ package com.teamworker.models;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Entity
@@ -18,5 +18,5 @@ public class ProjectStage {
     private String name;
 
     @OneToMany(mappedBy = "projectStage", fetch = FetchType.LAZY)
-    private Set<Project> projects;
+    private List<Project> projects;
 }
