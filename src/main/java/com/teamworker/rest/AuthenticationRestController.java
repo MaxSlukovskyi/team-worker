@@ -4,6 +4,9 @@ import com.teamworker.dtos.AuthenticationRequestDto;
 import com.teamworker.models.User;
 import com.teamworker.security.jwt.JwtTokenProvider;
 import com.teamworker.services.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +21,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/api/v1/auth/")
+@Tag(name = "/api/v1/auth", description = "Контролер аутентифікації користувача")
 public class AuthenticationRestController {
 
     private final AuthenticationManager authenticationManager;
@@ -32,6 +36,7 @@ public class AuthenticationRestController {
     }
 
     @PostMapping("login")
+    @Operation(summary = "Авторизація користувача")
     public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
         try {
             String username = requestDto.getUsername();
