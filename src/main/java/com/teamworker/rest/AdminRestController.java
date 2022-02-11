@@ -1,6 +1,7 @@
 package com.teamworker.rest;
 
 import com.teamworker.dtos.UserDto;
+import com.teamworker.exceptions.UserNotFoundException;
 import com.teamworker.models.User;
 import com.teamworker.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
