@@ -18,6 +18,6 @@ public class Position {
     private String name;
 
     //todo change one to many to many to many
-    @OneToMany(mappedBy = "position", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "position")
     private List<User> users;
 }

@@ -13,7 +13,7 @@ public class UserDto {
     private String username;
     private String name;
     private String surname;
-    //private Position position;
+    private Position position;
 
     public User toUser() {
         User user = new User();
@@ -21,7 +21,7 @@ public class UserDto {
         user.setUsername(username);
         user.setName(name);
         user.setSurname(surname);
-        //user.setPosition(position);
+        user.setPosition(position);
         return user;
     }
 

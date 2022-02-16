@@ -23,8 +23,8 @@ public class User {
     @Column(name = "user_surname")
     private String surname;
 
-    @ManyToOne
-    @JoinColumn(name="position_id",nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="position_id", nullable = false)
     private Position position;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

@@ -26,7 +26,7 @@ public class AdminRestController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "users/{id}")
+    @GetMapping(value = "users/get/{id}")
     @Operation(summary = "Отримати користувача за id")
     public ResponseEntity<UserDto> getUserById(@PathVariable(name = "id") Long id) {
         User user = userService.findById(id);
