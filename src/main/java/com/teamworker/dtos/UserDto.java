@@ -31,7 +31,7 @@ public class UserDto {
         userDto.setUsername(user.getUsername());
         userDto.setName(user.getName());
         userDto.setSurname(user.getSurname());
-        //userDto.setPosition(user.getPosition());
+        userDto.setPosition(user.getPosition());
         return userDto;
     }
 }
