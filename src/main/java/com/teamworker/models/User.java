@@ -1,9 +1,8 @@
 package com.teamworker.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.List;
@@ -26,7 +25,7 @@ public class User {
     private String surname;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="position_id", nullable = false)
+    @JoinColumn(name="position_id")
     private Position position;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
