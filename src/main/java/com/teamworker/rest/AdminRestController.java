@@ -2,7 +2,6 @@ package com.teamworker.rest;
 
 import com.teamworker.dtos.PositionDto;
 import com.teamworker.dtos.UserDto;
-import com.teamworker.exceptions.UserNotFoundException;
 import com.teamworker.models.Position;
 import com.teamworker.models.User;
 import com.teamworker.services.PositionService;
@@ -13,12 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -108,4 +102,16 @@ public class AdminRestController {
         positionService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @PostMapping(value = "users/register")
+    @Operation(summary = "Зареєструвати користувача")
+    public ResponseEntity registerUser(@RequestBody UserDto userDto) {
+        User user = userService.register(userDto.toUser());
+
+        if (user == null) {
+
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
