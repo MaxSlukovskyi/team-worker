@@ -34,6 +34,7 @@ public class PositionServiceImpl implements PositionService {
             return null;
         }
         findPosition.setName(position.getName());
+        findPosition.setProject(position.getProject());
         log.info("IN update - {} position updated", position.getId());
         return positionRepository.save(findPosition);
     }
