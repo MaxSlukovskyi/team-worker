@@ -42,6 +42,17 @@ public class PositionRestController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping(value = "get/{id}")
+    @Operation(summary = "Отримати посаду за ідентифікатором")
+    public ResponseEntity<PositionDto> getPositionById(@PathVariable(name = "id") Long id) {
+        Position position = positionService.getById(id);
+        if(position == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        PositionDto result = PositionDto.fromPosition(position);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @PostMapping(value = "add")
     @Operation(summary = "Додати посаду")
     public ResponseEntity<PositionDto> addPosition(@RequestBody PositionDto positionDto) {

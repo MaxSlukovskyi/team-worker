@@ -1,8 +1,7 @@
 package com.teamworker.models;
 
+import com.teamworker.models.enums.Status;
 import lombok.*;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.List;
