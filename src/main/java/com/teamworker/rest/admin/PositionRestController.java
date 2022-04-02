@@ -2,8 +2,10 @@ package com.teamworker.rest.admin;
 
 import com.teamworker.dtos.PositionDto;
 import com.teamworker.models.Position;
+import com.teamworker.models.Project;
 import com.teamworker.models.User;
 import com.teamworker.services.PositionService;
+import com.teamworker.services.ProjectService;
 import com.teamworker.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,12 +23,14 @@ import java.util.stream.Collectors;
 public class PositionRestController {
 
     private final PositionService positionService;
+    private final ProjectService projectService;
     private final UserService userService;
 
     @Autowired
-    public PositionRestController(PositionService positionService, UserService userService) {
+    public PositionRestController(PositionService positionService, UserService userService, ProjectService projectService) {
         this.positionService = positionService;
         this.userService = userService;
+        this.projectService = projectService;
     }
 
     @GetMapping(value = "get/all")
@@ -56,6 +60,10 @@ public class PositionRestController {
     @PostMapping(value = "add")
     @Operation(summary = "Додати посаду")
     public ResponseEntity<PositionDto> addPosition(@RequestBody PositionDto positionDto) {
+        Project project = projectService.getById(positionDto.getProject().getId());
+        if(project == null) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
 
         positionService.add(positionDto.toPosition());
 
