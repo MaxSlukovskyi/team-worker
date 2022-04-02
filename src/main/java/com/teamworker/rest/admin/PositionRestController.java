@@ -35,7 +35,7 @@ public class PositionRestController {
         List<Position> positions = positionService.getAll();
 
         if(positions.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
         List<PositionDto> result = positions.stream().map(PositionDto::fromPosition).collect(Collectors.toList());
 
@@ -47,7 +47,7 @@ public class PositionRestController {
     public ResponseEntity<PositionDto> getPositionById(@PathVariable(name = "id") Long id) {
         Position position = positionService.getById(id);
         if(position == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
         PositionDto result = PositionDto.fromPosition(position);
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -68,14 +68,10 @@ public class PositionRestController {
             @PathVariable(name = "id") Long id,
             @RequestBody PositionDto positionDto) {
 
-        if(positionDto.getName() == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
         Position position = positionService.update(id, positionDto.toPosition());
 
         if(position == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
         positionDto = PositionDto.fromPosition(position);

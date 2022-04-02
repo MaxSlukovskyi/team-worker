@@ -14,7 +14,6 @@ public class ProjectDto {
 
     private Long id;
     private String name;
-    private Boolean isFinished;
     private Date createTime;
     private ProjectStage projectStage;
     private ProjectType projectType;
