@@ -1,5 +1,8 @@
 package com.teamworker.models;
 
+import com.teamworker.models.enums.ProjectStage;
+import com.teamworker.models.enums.ProjectType;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -18,19 +21,16 @@ public class Project {
     @Column(name = "project_name")
     private String name;
 
-    @Column(name = "is_finished")
-    private Boolean isFinished;
-
     @Column(name = "create_time")
     private Date createTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_stage_id", nullable = false)
-    ProjectStage projectStage;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "project_stage")
+    private ProjectStage projectStage;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_type_id", nullable = false)
-    ProjectType projectType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "project_type")
+    private ProjectType projectType;
 
     @ManyToMany(mappedBy = "projects")
     private List<User> users;
