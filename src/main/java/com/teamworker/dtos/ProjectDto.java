@@ -1,20 +1,18 @@
 package com.teamworker.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.teamworker.models.enums.ProjectStage;
 import com.teamworker.models.enums.ProjectType;
 import com.teamworker.models.Project;
 import lombok.Data;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProjectDto {
 
     private Long id;
     private String name;
-    private Date createTime;
+    private Timestamp createTime;
     private ProjectStage projectStage;
     private ProjectType projectType;
 

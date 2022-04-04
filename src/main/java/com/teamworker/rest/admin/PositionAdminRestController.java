@@ -20,14 +20,14 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/api/v1/admin/positions")
 @Tag(name = "/api/v1/admin/positions", description = "Контролер для керування посадами")
-public class PositionRestController {
+public class PositionAdminRestController {
 
     private final PositionService positionService;
     private final ProjectService projectService;
     private final UserService userService;
 
     @Autowired
-    public PositionRestController(PositionService positionService, UserService userService, ProjectService projectService) {
+    public PositionAdminRestController(PositionService positionService, UserService userService, ProjectService projectService) {
         this.positionService = positionService;
         this.userService = userService;
         this.projectService = projectService;

@@ -16,19 +16,19 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/v1/admin/users")
-@Tag(name = "/api/v1/admin/users", description = "Контролер для керування користувачами")
-public class UserRestController {
+@Tag(name = "/api/v1/admin/users", description = "Контролер адміністрування користувачів")
+public class UserAdminRestController {
 
     private final UserService userService;
 
     @Autowired
-    public UserRestController(UserService userService) {
+    public UserAdminRestController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping(value = "get/all")
     @Operation(summary = "Отримати всіх користувачів")
-    public ResponseEntity<List<UserDto>> getAll(@PathVariable(name = "id") Long id) {
+    public ResponseEntity<List<UserDto>> getAll() {
         List<User> users = userService.getAll();
 
         if (users == null) {

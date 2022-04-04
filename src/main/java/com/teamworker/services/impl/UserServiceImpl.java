@@ -8,8 +8,11 @@ import com.teamworker.models.enums.Status;
 import com.teamworker.repositories.RoleRepository;
 import com.teamworker.repositories.UserRepository;
 import com.teamworker.services.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,18 +21,12 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     @Override
     public User register(User user) {
@@ -119,5 +116,27 @@ public class UserServiceImpl implements UserService {
     public void delete(Long id) {
         userRepository.deleteById(id);
         log.info("IN delete - user with id: {} successfully deleted", id);
+    }
+
+    @Override
+    public User getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return this.findByUsername(auth.getName());
+    }
+
+    @Override
+    public boolean isAdmin(User user) {
+        Role roleAdmin = roleRepository.findByName("ROLE_ADMIN");
+        return user.getRoles().contains(roleAdmin);
+    }
+
+    @Override
+    public boolean isAdminOfProject(User user, Project project) {
+        for (Position position : user.getPosition()) {
+            if (position.getName() == "Administrator" && position.getProject() == project) {
+                return true;
+            }
+        }
+        return false;
     }
 }

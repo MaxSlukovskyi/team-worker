@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(value = "/api/v1/admin/projects")
 @Tag(name = "/api/v1/admin/projects", description = "Контролер для керування проектами")
-public class ProjectRestController {
+public class ProjectAdminRestController {
 
     private final ProjectService projectService;
 
     @Autowired
-    ProjectRestController(ProjectService projectService) {
+    ProjectAdminRestController(ProjectService projectService) {
         this.projectService = projectService;
     }
 
