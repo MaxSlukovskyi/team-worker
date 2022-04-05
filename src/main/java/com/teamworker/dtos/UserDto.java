@@ -1,6 +1,5 @@
 package com.teamworker.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.teamworker.models.Position;
 import com.teamworker.models.Role;

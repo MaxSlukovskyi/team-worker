@@ -1,11 +1,13 @@
 package com.teamworker.dtos;
 
+import com.teamworker.models.Position;
 import com.teamworker.models.enums.ProjectStage;
 import com.teamworker.models.enums.ProjectType;
 import com.teamworker.models.Project;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 public class ProjectDto {
@@ -15,6 +17,7 @@ public class ProjectDto {
     private Timestamp createTime;
     private ProjectStage projectStage;
     private ProjectType projectType;
+    private List<Position> positions;
 
     public Project toProject() {
         Project project = new Project();
@@ -23,6 +26,7 @@ public class ProjectDto {
         project.setCreateTime(createTime);
         project.setProjectStage(projectStage);
         project.setProjectType(projectType);
+        project.setPositions(positions);
         return project;
     }
 
@@ -33,6 +37,7 @@ public class ProjectDto {
         projectDto.setCreateTime(project.getCreateTime());
         projectDto.setProjectStage(project.getProjectStage());
         projectDto.setProjectType(project.getProjectType());
+        projectDto.setPositions(project.getPositions());
         return projectDto;
     }
 }
