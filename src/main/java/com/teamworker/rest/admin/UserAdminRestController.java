@@ -1,6 +1,7 @@
 package com.teamworker.rest.admin;
 
 import com.teamworker.dtos.MainUserInfoDto;
+import com.teamworker.dtos.PositionDto;
 import com.teamworker.dtos.UserDto;
 import com.teamworker.models.User;
 import com.teamworker.services.UserService;
@@ -66,5 +67,15 @@ public class UserAdminRestController {
 
         MainUserInfoDto result = MainUserInfoDto.fromUser(user);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/delete/{id}")
+    @Operation(summary = "Видалити користувача")
+    public ResponseEntity<UserDto> deleteUser(@PathVariable(value = "id") Long id) {
+        if(userService.getById(id) == null) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        userService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

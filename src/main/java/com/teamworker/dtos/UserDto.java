@@ -3,6 +3,7 @@ package com.teamworker.dtos;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.teamworker.models.Position;
+import com.teamworker.models.Role;
 import com.teamworker.models.User;
 import lombok.Data;
 
@@ -16,6 +17,7 @@ public class UserDto {
     private String name;
     private String surname;
     private List<Position> position;
+    private List<Role> roles;
 
     public User toUser() {
         User user = new User();
@@ -24,6 +26,7 @@ public class UserDto {
         user.setName(name);
         user.setSurname(surname);
         user.setPosition(position);
+        user.setRoles(roles);
         return user;
     }
 
@@ -34,6 +37,7 @@ public class UserDto {
         userDto.setName(user.getName());
         userDto.setSurname(user.getSurname());
         userDto.setPosition(user.getPosition());
+        userDto.setRoles(user.getRoles());
         return userDto;
     }
 }
