@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +51,7 @@ public class ProjectAdminRestController {
 
     @PostMapping(value = "/add")
     @Operation(summary = "Додати проект")
-    public ResponseEntity<ProjectDto> addProject(@RequestBody ProjectDto projectDto) {
+    public ResponseEntity<ProjectDto> addProject(@RequestBody ProjectDto projectDto) throws ParseException {
         Project project = projectService.add(projectDto.toProject());
         if(project == null) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -63,7 +64,7 @@ public class ProjectAdminRestController {
     @Operation(summary = "Оновити проект")
     public ResponseEntity<ProjectDto> updateProject(
             @PathVariable(value = "id") Long id,
-            @RequestBody ProjectDto projectDto) {
+            @RequestBody ProjectDto projectDto) throws ParseException {
 
         Project project = projectService.update(id, projectDto.toProject());
 

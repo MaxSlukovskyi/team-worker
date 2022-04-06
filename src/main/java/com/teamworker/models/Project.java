@@ -42,6 +42,5 @@ public class Project {
     private List<Task> tasks;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<Position> positions;
 }

@@ -15,12 +15,14 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Transactional
 public class JwtTokenProvider {
 
     @Value("${jwt.token.secret}")

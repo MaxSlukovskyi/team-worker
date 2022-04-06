@@ -102,8 +102,8 @@ public class UserServiceImpl implements UserService {
             return null;
         }
 
+
         foundUser.setUsername(user.getUsername());
-        foundUser.setPassword(passwordEncoder.encode(user.getPassword()));
         foundUser.setName(user.getName());
         foundUser.setSurname(user.getSurname());
 

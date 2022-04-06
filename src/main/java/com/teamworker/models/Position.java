@@ -24,6 +24,7 @@ public class Position {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
+    @JsonIgnore
     private Project project;
 
     @ManyToMany(mappedBy = "position", fetch = FetchType.LAZY)

@@ -24,14 +24,12 @@ public class Task {
 
     private String description;
 
-    @CreatedDate
     @Column(name = "create_time")
     private Timestamp createTime;
 
     @Column(name = "due_time")
     private Timestamp dueTime;
 
-    @LastModifiedDate
     @Column(name = "last_edit_time")
     private Timestamp lastEditTime;
 

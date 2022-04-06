@@ -10,7 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -24,21 +26,50 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task add(Task task) {
+        task.setCreateTime(new Timestamp(System.currentTimeMillis()));
+        task.setLastEditTime(new Timestamp(System.currentTimeMillis()));
         log.info("IN add - {} task added", task.getName());
         return taskRepository.save(task);
     }
 
     @Override
-    public List<Task> getAll() {
-        User currentUser = userService.getCurrentUser();
-        List<Position> currentUserPositions = currentUser.getPosition();
+    public Task getById(Long id) {
+        Task task = taskRepository.findById(id).orElse(null);
 
-        List<Task> tasks = new ArrayList<>();
-        for (Position position : currentUserPositions) {
-            tasks.addAll(this.getAllByProject(position.getProject()));
+        if (task == null) {
+            log.warn("IN getById - no task found by id: {}", id);
+            return null;
         }
+
+        log.info("IN getById - {} task added", task.getId());
+        return task;
+    }
+
+    @Override
+    public List<Task> getAll() {
+        List<Task> tasks = taskRepository.findAll();
+        log.info("IN getAll - {} tasks added", tasks.size());
         return tasks;
     }
+
+    //таски проектів адміна
+//    @Override
+//    public List<Task> getAll() {
+//        User currentUser = userService.getCurrentUser();
+//        List<Position> currentUserPositions = currentUser.getPosition();
+//
+//        List<Task> tasks = new ArrayList<>();
+//        List<Project> projects = new ArrayList<>();
+//        for (Position position : currentUserPositions) {
+//            projects.add(position.getProject());
+//        }
+//        List<Project> projectsWithoutDuplicates = new ArrayList<>(new HashSet<>(projects));
+//        for (Project project : projectsWithoutDuplicates) {
+//            tasks.addAll(this.getAllByProject(project));
+//        }
+//        log.info("IN getAll - {} tasks found", tasks.size());
+//        return tasks;
+//    }
 
     @Override
     public Task update(Long id, Task task) {
@@ -62,6 +93,7 @@ public class TaskServiceImpl implements TaskService {
         foundTask.setPriority(task.getPriority());
         foundTask.setStage(task.getStage());
         foundTask.setType(task.getType());
+        foundTask.setLastEditTime(new Timestamp(System.currentTimeMillis()));
 
         log.info("IN update - {} task updated", task.getId());
 
@@ -70,13 +102,21 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void delete(Long id) {
+        Task task = taskRepository.findById(id).orElse(null);
 
+        if (task == null) {
+            log.warn("IN delete - no task found by id: {}", id);
+            return;
+        }
+
+        taskRepository.deleteById(id);
+        log.info("IN delete - task with id: {} successfully deleted", id);
     }
 
     @Override
     public List<Task> getAllByProject(Project project) {
         List<Task> tasks = taskRepository.getAllByProject(project);
-        log.info("IN getAllByProject - {} tasks updated", tasks.size());
+        log.info("IN getAllByProject - {} tasks found", tasks.size());
         return tasks;
     }
 

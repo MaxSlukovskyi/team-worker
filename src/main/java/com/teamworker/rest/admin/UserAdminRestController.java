@@ -55,7 +55,7 @@ public class UserAdminRestController {
 
     @PutMapping(value = "/update/{id}")
     @Operation(summary = "Оновити користувача")
-    public ResponseEntity<MainUserInfoDto> updateUser(
+    public ResponseEntity<UserDto> updateUser(
             @PathVariable(value = "id") Long id,
             @RequestBody MainUserInfoDto userDto) {
 
@@ -65,7 +65,7 @@ public class UserAdminRestController {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
-        MainUserInfoDto result = MainUserInfoDto.fromUser(user);
+        UserDto result = UserDto.fromUser(user);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

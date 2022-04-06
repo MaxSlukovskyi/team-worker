@@ -17,4 +17,5 @@ public interface TaskService {
 
     List<Task> getAllByProject(Project project);
 
+    Task getById(Long id);
 }
