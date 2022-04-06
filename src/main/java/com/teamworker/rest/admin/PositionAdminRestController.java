@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200/")
 @RequestMapping(value = "/api/v1/admin/positions")
 @Tag(name = "/api/v1/admin/positions", description = "Контролер для керування посадами")
 public class PositionAdminRestController {

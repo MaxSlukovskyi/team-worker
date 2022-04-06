@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200/")
 @RequestMapping(value = "/api/v1/admin/users")
 @Tag(name = "/api/v1/admin/users", description = "Контролер адміністрування користувачів")
 public class UserAdminRestController {
@@ -57,7 +58,7 @@ public class UserAdminRestController {
     @Operation(summary = "Оновити користувача")
     public ResponseEntity<UserDto> updateUser(
             @PathVariable(value = "id") Long id,
-            @RequestBody MainUserInfoDto userDto) {
+            @RequestBody UserDto userDto) {
 
         User user = userService.update(id, userDto.toUser());
 

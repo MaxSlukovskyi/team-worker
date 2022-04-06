@@ -3,6 +3,8 @@ package com.teamworker.security.jwt;
 import com.teamworker.models.Role;
 import com.teamworker.security.JwtUserDetailsService;
 import io.jsonwebtoken.*;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Component
 @Transactional
+@Slf4j
 public class JwtTokenProvider {
 
     @Value("${jwt.token.secret}")
