@@ -27,4 +27,6 @@ public interface UserService {
     boolean isAdmin(User user);
 
     boolean isAdminOfProject(User user, Project project);
+
+    User addPosition(Long id, Position position);
 }

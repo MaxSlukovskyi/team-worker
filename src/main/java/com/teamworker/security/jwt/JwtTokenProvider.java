@@ -93,11 +93,11 @@ public class JwtTokenProvider {
             }
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            throw new JwtAuthenticationException("JWT token is expired or invalid");
+            throw new JwtAuthenticationException("Токен неправильний або його термін дії вийшов");
         }
     }
 
     private List<String> getRoleNames(List<Role> userRoles) {
-        return userRoles.stream().map(role -> role.getName()).collect(Collectors.toList());
+        return userRoles.stream().map(Role::getName).collect(Collectors.toList());
     }
 }

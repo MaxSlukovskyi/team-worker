@@ -3,7 +3,6 @@ package com.teamworker.rest.admin;
 import com.teamworker.dtos.PositionDto;
 import com.teamworker.models.Position;
 import com.teamworker.models.Project;
-import com.teamworker.models.User;
 import com.teamworker.services.PositionService;
 import com.teamworker.services.ProjectService;
 import com.teamworker.services.UserService;
@@ -14,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,8 +60,8 @@ public class PositionAdminRestController {
 
     @PostMapping(value = "add")
     @Operation(summary = "Додати посаду")
-    public ResponseEntity<PositionDto> addPosition(@RequestBody PositionDto positionDto) {
-        Project project = projectService.getById(positionDto.getProject().getId());
+    public ResponseEntity<PositionDto> addPosition(@RequestBody PositionDto positionDto) throws ParseException {
+        Project project = projectService.getById(positionDto.getProjectDto().getId());
         if(project == null) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
@@ -75,7 +75,7 @@ public class PositionAdminRestController {
     @Operation(summary = "Оновити посаду")
     public ResponseEntity<PositionDto> updatePosition(
             @PathVariable(name = "id") Long id,
-            @RequestBody PositionDto positionDto) {
+            @RequestBody PositionDto positionDto) throws ParseException {
 
         Position position = positionService.update(id, positionDto.toPosition());
 
@@ -97,10 +97,7 @@ public class PositionAdminRestController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        List<User> users = userService.findUsersWithPosition(position);
-        if(users != null) {
-            return new ResponseEntity<>(HttpStatus.PRECONDITION_FAILED);
-        }
+
 
         positionService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);

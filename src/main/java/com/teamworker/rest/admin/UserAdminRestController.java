@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,6 +62,22 @@ public class UserAdminRestController {
             @RequestBody UserDto userDto) {
 
         User user = userService.update(id, userDto.toUser());
+
+        if(user == null) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        UserDto result = UserDto.fromUser(user);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/add/position/{id}")
+    @Operation(summary = "Оновити користувача")
+    public ResponseEntity<UserDto> addPosition(
+            @PathVariable(value = "id") Long id,
+            @RequestBody PositionDto positionDto) throws ParseException {
+
+        User user = userService.addPosition(id, positionDto.toPosition());
 
         if(user == null) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);

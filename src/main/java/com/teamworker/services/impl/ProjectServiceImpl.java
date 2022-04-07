@@ -58,8 +58,20 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void delete(Long id) {
-       log.info("IN delete - {} project deleted", id);
-       projectRepository.deleteById(id);
+        Project project = projectRepository.findById(id).orElse(null);
+        if(project == null) {
+            return;
+        }
+
+        List<Position> positions = project.getPositions();
+        for (Position position : positions) {
+            for (User user : position.getUsers()) {
+                user.getPosition().remove(position);
+            }
+        }
+
+        log.info("IN delete - {} project deleted", id);
+        projectRepository.deleteById(id);
     }
 
     @Override

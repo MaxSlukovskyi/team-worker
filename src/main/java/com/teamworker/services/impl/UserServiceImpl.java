@@ -97,11 +97,9 @@ public class UserServiceImpl implements UserService {
         }
 
         User userWithSameUsername = findByUsername(user.getUsername());
-
         if (userWithSameUsername != null && userWithSameUsername.getId() != id) {
             return null;
         }
-
 
         foundUser.setUsername(user.getUsername());
         foundUser.setName(user.getName());
@@ -109,6 +107,19 @@ public class UserServiceImpl implements UserService {
 
         log.info("IN update - {} project updated", user.getId());
 
+        return userRepository.save(foundUser);
+    }
+
+    @Override
+    public User addPosition(Long id, Position position) {
+        User foundUser = userRepository.findById(id).orElse(null);
+        if(foundUser == null) {
+            return null;
+        }
+
+        foundUser.getPosition().add(position);
+
+        log.info("IN addPosition - {} position added to user {}", position.getName(), foundUser.getId());
         return userRepository.save(foundUser);
     }
 
