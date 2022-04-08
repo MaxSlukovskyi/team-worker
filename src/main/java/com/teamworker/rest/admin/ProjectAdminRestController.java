@@ -49,7 +49,7 @@ public class ProjectAdminRestController {
 
     @PostMapping(value = "/add")
     @Operation(summary = "Додати проект")
-    public ResponseEntity<ProjectDto> addProject(@RequestBody ProjectDto projectDto) throws ParseException {
+    public ResponseEntity<ProjectDto> addProject(@RequestBody ProjectDto projectDto) {
         Project project = projectService.add(projectDto.toProject());
         if(project == null) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
@@ -62,7 +62,7 @@ public class ProjectAdminRestController {
     @Operation(summary = "Оновити проект")
     public ResponseEntity<ProjectDto> updateProject(
             @PathVariable(value = "id") Long id,
-            @RequestBody ProjectDto projectDto) throws ParseException {
+            @RequestBody ProjectDto projectDto) {
 
         Project project = projectService.update(id, projectDto.toProject());
 
