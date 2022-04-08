@@ -22,4 +22,6 @@ public interface TaskService {
     Task getById(Long id);
 
     List<Task> getAllByStage(String stageName);
+
+    Task changeStage(Long taskId, String stageName);
 }

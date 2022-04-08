@@ -69,6 +69,22 @@ public class TaskRestController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @PutMapping(value = "/update/{id}/{stage}")
+    @Operation(summary = "Оновити завдання")
+    public ResponseEntity<TaskDto> updateTask(
+            @PathVariable(value = "id") Long id,
+            @PathVariable(value = "stage") String stageName) {
+
+        Task task = taskService.changeStage(id, stageName);
+
+        if(task == null) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        TaskDto result = TaskDto.fromTask(task);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @DeleteMapping(value = "/delete/{id}")
     @Operation(summary = "Видалити завдання")
     public ResponseEntity<TaskDto> deleteTask(@PathVariable(value = "id") Long id) {

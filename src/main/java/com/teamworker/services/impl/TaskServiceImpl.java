@@ -10,13 +10,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -65,6 +62,24 @@ public class TaskServiceImpl implements TaskService {
         List<Task> tasks = taskRepository.getAllByAssigneeAndStage(userService.getCurrentUser(), TaskStage.valueOf(stageName));
         log.info("IN getAllByStage - {} tasks added", tasks.size());
         return tasks;
+    }
+
+    @Override
+    public Task changeStage(Long taskId, String stageName) {
+        Task task = taskRepository.findById(taskId).orElse(null);
+
+        if (task == null) {
+            return null;
+        }
+
+        if (Objects.equals(stageName, TaskStage.IN_PROGRESS.name())) {
+            task.setStartTime(dateFormat.format(new Date()));
+        }
+
+        task.setStage(TaskStage.valueOf(stageName));
+        taskRepository.save(task);
+        log.info("IN changeStage - task with id {} updated", task.getId());
+        return task;
     }
 
     //таски проектів адміна
