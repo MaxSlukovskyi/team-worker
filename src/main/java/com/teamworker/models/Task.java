@@ -22,6 +22,7 @@ public class Task {
     @Column(name = "task_name")
     private String name;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "create_time")

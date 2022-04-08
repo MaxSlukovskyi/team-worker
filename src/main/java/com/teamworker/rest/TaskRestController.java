@@ -17,6 +17,7 @@ import java.text.ParseException;
 
 @RestController
 @RequestMapping(value = "/api/v1/tasks")
+@CrossOrigin(origins = "http://localhost:4200/")
 @Tag(name = "/api/v1/tasks", description = "Контролер для керування завданнями")
 public class TaskRestController {
 
@@ -29,7 +30,7 @@ public class TaskRestController {
 
     @PostMapping(value = "/add")
     @Operation(summary = "Додати завдання")
-    public ResponseEntity<TaskDto> addTask(@RequestBody TaskDto taskDto) throws ParseException {
+    public ResponseEntity<TaskDto> addTask(@RequestBody TaskDto taskDto) {
         Task task = taskService.add(taskDto.toTask());
         if(task == null) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);

@@ -37,7 +37,9 @@ public class TaskDto {
         task.setId(id);
         task.setName(name);
         task.setDescription(description);
+        task.setCreateTime(createTime);
         task.setDueTime(dueTime);
+        task.setLastEditTime(lastEditTime);
         task.setStartTime(startTime);
         task.setEndTime(endTime);
         task.setAssignee(assignee.toUser());
