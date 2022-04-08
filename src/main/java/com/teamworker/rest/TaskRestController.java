@@ -13,7 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 @RestController
 @RequestMapping(value = "/api/v1/tasks")
@@ -22,6 +24,8 @@ import java.text.ParseException;
 public class TaskRestController {
 
     private final TaskService taskService;
+    private final SimpleDateFormat getDateFormat = new SimpleDateFormat("yyyy-MM-ddTHH:mm");
+    private final SimpleDateFormat setDateFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm");
 
     @Autowired
     public TaskRestController(TaskService taskService) {
@@ -30,7 +34,13 @@ public class TaskRestController {
 
     @PostMapping(value = "/add")
     @Operation(summary = "Додати завдання")
-    public ResponseEntity<TaskDto> addTask(@RequestBody TaskDto taskDto) {
+    public ResponseEntity<TaskDto> addTask(@RequestBody TaskDto taskDto) throws ParseException {
+
+        Timestamp parsedGetDueTime = new Timestamp(getDateFormat.parse(taskDto.getDueTime()).getTime());
+        String parsedSetDueTime = setDateFormat.format(parsedGetDueTime.getTime());
+
+        taskDto.setDueTime(parsedSetDueTime);
+
         Task task = taskService.add(taskDto.toTask());
         if(task == null) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);

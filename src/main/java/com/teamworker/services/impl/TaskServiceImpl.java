@@ -85,7 +85,6 @@ public class TaskServiceImpl implements TaskService {
         foundTask.setName(task.getName());
         foundTask.setDescription(task.getDescription());
         foundTask.setDueTime(task.getDueTime());
-        foundTask.setStartTime(task.getStartTime());
         foundTask.setEndTime(task.getEndTime());
         foundTask.setAssignee(task.getAssignee());
         foundTask.setProject(task.getProject());
