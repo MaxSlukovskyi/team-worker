@@ -47,4 +47,20 @@ public class TaskAdminRestController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @PutMapping(value = "/update/{id}")
+    @Operation(summary = "Оновити завдання")
+    public ResponseEntity<TaskDto> updateTask(
+            @PathVariable(value = "id") Long id,
+            @RequestBody TaskDto taskDto) {
+
+        Task task = taskService.update(id, taskDto.toTask());
+
+        if(task == null) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        TaskDto result = TaskDto.fromTask(task);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }
