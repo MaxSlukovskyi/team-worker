@@ -1,6 +1,7 @@
 package com.teamworker.services.impl;
 
 import com.teamworker.models.*;
+import com.teamworker.models.enums.TaskStage;
 import com.teamworker.repositories.RoleRepository;
 import com.teamworker.repositories.TaskRepository;
 import com.teamworker.services.TaskService;
@@ -56,6 +57,13 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAll() {
         List<Task> tasks = taskRepository.findAll();
         log.info("IN getAll - {} tasks added", tasks.size());
+        return tasks;
+    }
+
+    @Override
+    public List<Task> getAllByStage(String stageName) {
+        List<Task> tasks = taskRepository.getAllByAssigneeAndStage(userService.getCurrentUser(), TaskStage.valueOf(stageName));
+        log.info("IN getAllByStage - {} tasks added", tasks.size());
         return tasks;
     }
 

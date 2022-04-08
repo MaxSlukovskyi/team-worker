@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/v1/tasks")
@@ -49,6 +51,22 @@ public class TaskRestController {
         }
         TaskDto result = TaskDto.fromTask(task);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
+
+    @GetMapping(value = "/get/all")
+    @Operation(summary = "Отримати всі завдання")
+    public ResponseEntity<List<TaskDto>> getAll() {
+        List<Task> tasks = taskService.getAll();
+        List<TaskDto> result = tasks.stream().map(TaskDto::fromTask).collect(Collectors.toList());
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/get/all/{stage}")
+    @Operation(summary = "Отримати всі завдання за стадією")
+    public ResponseEntity<List<TaskDto>> getAllByStage(@PathVariable(value = "stage") String stageName) {
+        List<Task> tasks = taskService.getAllByStage(stageName);
+        List<TaskDto> result = tasks.stream().map(TaskDto::fromTask).collect(Collectors.toList());
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/delete/{id}")

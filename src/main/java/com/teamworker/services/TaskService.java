@@ -2,6 +2,7 @@ package com.teamworker.services;
 
 import com.teamworker.models.Project;
 import com.teamworker.models.Task;
+import com.teamworker.models.User;
 
 import java.text.ParseException;
 import java.util.List;
@@ -19,4 +20,6 @@ public interface TaskService {
     List<Task> getAllByProject(Project project);
 
     Task getById(Long id);
+
+    List<Task> getAllByStage(String stageName);
 }
