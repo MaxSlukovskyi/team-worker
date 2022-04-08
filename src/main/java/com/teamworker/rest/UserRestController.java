@@ -43,9 +43,9 @@ public class UserRestController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping(value = "get/position")
+    @GetMapping(value = "get/all/position/{id}")
     @Operation(summary = "Отримати користувачів за посадою")
-    public ResponseEntity<List<UserDto>> getUserByPosition(@PathVariable(name = "position") Long positionId) {
+    public ResponseEntity<List<UserDto>> getUserByPosition(@PathVariable(name = "id") Long positionId) {
         Position position = positionService.getById(positionId);
         List<User> users = userService.findUsersWithPosition(position);
 
