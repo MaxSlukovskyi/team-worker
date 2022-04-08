@@ -24,7 +24,8 @@ import java.text.SimpleDateFormat;
 public class TaskRestController {
 
     private final TaskService taskService;
-    private final SimpleDateFormat getDateFormat = new SimpleDateFormat("yyyy-MM-ddTHH:mm");
+
+    private final SimpleDateFormat getDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private final SimpleDateFormat setDateFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm");
 
     @Autowired
@@ -36,6 +37,7 @@ public class TaskRestController {
     @Operation(summary = "Додати завдання")
     public ResponseEntity<TaskDto> addTask(@RequestBody TaskDto taskDto) throws ParseException {
 
+        taskDto.setDueTime(taskDto.getDueTime().replace('T', ' '));
         Timestamp parsedGetDueTime = new Timestamp(getDateFormat.parse(taskDto.getDueTime()).getTime());
         String parsedSetDueTime = setDateFormat.format(parsedGetDueTime.getTime());
 

@@ -59,6 +59,7 @@ public class TaskAdminRestController {
             @PathVariable(value = "id") Long id,
             @RequestBody TaskDto taskDto) throws ParseException {
 
+        taskDto.setDueTime(taskDto.getDueTime().replace('T', ' '));
         Timestamp parsedGetDueTime = new Timestamp(getDateFormat.parse(taskDto.getDueTime()).getTime());
         String parsedSetDueTime = setDateFormat.format(parsedGetDueTime.getTime());
 
