@@ -32,9 +32,6 @@ public class ProjectAdminRestController {
     @Operation(summary = "Отримати всі проекти")
     public ResponseEntity<List<ProjectDto>> getAll() {
         List<Project> projects = projectService.getAll();
-        if(projects == null) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
-        }
         List<ProjectDto> result = projects.stream().map(ProjectDto::fromProject).collect(Collectors.toList());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

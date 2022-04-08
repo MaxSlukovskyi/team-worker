@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,8 +27,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task add(Task task) {
-        task.setCreateTime(new Timestamp(System.currentTimeMillis()));
-        task.setLastEditTime(new Timestamp(System.currentTimeMillis()));
         log.info("IN add - {} task added", task.getName());
         return taskRepository.save(task);
     }
@@ -93,7 +92,7 @@ public class TaskServiceImpl implements TaskService {
         foundTask.setPriority(task.getPriority());
         foundTask.setStage(task.getStage());
         foundTask.setType(task.getType());
-        foundTask.setLastEditTime(new Timestamp(System.currentTimeMillis()));
+        foundTask.setLastEditTime(task.getLastEditTime());
 
         log.info("IN update - {} task updated", task.getId());
 
