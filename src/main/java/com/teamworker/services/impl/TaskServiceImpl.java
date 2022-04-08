@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -24,9 +25,16 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final RoleRepository roleRepository;
     private final UserService userService;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm");
+
 
     @Override
-    public Task add(Task task) {
+    public Task add(Task task) throws ParseException {
+
+        if (dateFormat.parse(task.getDueTime()).before(dateFormat.parse(task.getCreateTime()))) {
+            return null;
+        }
+
         log.info("IN add - {} task added", task.getName());
         return taskRepository.save(task);
     }
@@ -71,14 +79,19 @@ public class TaskServiceImpl implements TaskService {
 //    }
 
     @Override
-    public Task update(Long id, Task task) {
+    public Task update(Long id, Task task) throws ParseException {
         Task foundTask = taskRepository.findById(id).orElse(null);
         if(foundTask == null) {
             return null;
         }
-        if (foundTask.getCreator() != userService.getCurrentUser() ||
-                !(userService.isAdmin(userService.getCurrentUser()) &&
-                        userService.isAdminOfProject(userService.getCurrentUser(), foundTask.getProject()))) {
+
+//        if (foundTask.getCreator() != userService.getCurrentUser() ||
+//                !(userService.isAdmin(userService.getCurrentUser()) &&
+//                        userService.isAdminOfProject(userService.getCurrentUser(), foundTask.getProject()))) {
+//            return null;
+//        }
+
+        if (dateFormat.parse(task.getDueTime()).before(dateFormat.parse(task.getCreateTime()))) {
             return null;
         }
 
@@ -89,7 +102,6 @@ public class TaskServiceImpl implements TaskService {
         foundTask.setAssignee(task.getAssignee());
         foundTask.setProject(task.getProject());
         foundTask.setPriority(task.getPriority());
-        foundTask.setStage(task.getStage());
         foundTask.setType(task.getType());
         foundTask.setLastEditTime(task.getLastEditTime());
 
