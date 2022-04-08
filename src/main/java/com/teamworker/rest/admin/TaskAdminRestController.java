@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public class TaskAdminRestController {
 
     private final TaskService taskService;
-    private final SimpleDateFormat getDateFormat = new SimpleDateFormat("yyyy-MM-ddTHH:mm");
+    private final SimpleDateFormat getDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private final SimpleDateFormat setDateFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm");
 
     @Autowired
