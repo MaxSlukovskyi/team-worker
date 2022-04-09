@@ -1,14 +1,18 @@
 package com.teamworker.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.teamworker.models.enums.Status;
 import lombok.*;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.lang.Nullable;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Data
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
 
     @Id
@@ -24,9 +28,12 @@ public class User {
     @Column(name = "user_surname")
     private String surname;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="position_id")
-    private Position position;
+    @ManyToMany(cascade= CascadeType.ALL, fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinTable(name = "users_positions",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "position_id"))
+    private List<Position> position;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
@@ -36,17 +43,14 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
+    @JsonIgnore
     private Status status;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "users_projects",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "project_id"))
-    private List<Project> projects;
-
     @OneToMany(mappedBy = "assignee")
+    @JsonIgnore
     private List<Task> assignedTasks;
 
     @OneToMany(mappedBy = "creator")
+    @JsonIgnore
     private List<Task> createdTasks;
 }
