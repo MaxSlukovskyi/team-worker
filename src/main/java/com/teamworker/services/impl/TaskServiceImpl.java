@@ -65,6 +65,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<Task> getAllByStageForAdmin(String stageName) {
+        List<Task> tasks = taskRepository.getAllByStage(TaskStage.valueOf(stageName));
+        log.info("IN getAllByStageForAdmin - {} tasks added", tasks.size());
+        return tasks;
+    }
+
+    @Override
     public Task changeStage(Long taskId, String stageName) {
         Task task = taskRepository.findById(taskId).orElse(null);
 

@@ -75,4 +75,12 @@ public class TaskAdminRestController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/get/all/{stage}")
+    @Operation(summary = "Отримати всі завдання за стадією для адміністратора")
+    public ResponseEntity<List<TaskDto>> getAllByStage(@PathVariable(value = "stage") String stageName) {
+        List<Task> tasks = taskService.getAllByStageForAdmin(stageName);
+        List<TaskDto> result = tasks.stream().map(TaskDto::fromTask).collect(Collectors.toList());
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 }

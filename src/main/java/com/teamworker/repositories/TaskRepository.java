@@ -12,4 +12,6 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> getAllByProject(Project project);
 
     List<Task> getAllByAssigneeAndStage(User assignee, TaskStage stage);
+
+    List<Task> getAllByStage(TaskStage stage);
 }

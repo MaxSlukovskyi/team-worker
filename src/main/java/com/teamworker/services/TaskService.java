@@ -23,5 +23,7 @@ public interface TaskService {
 
     List<Task> getAllByStage(String stageName);
 
+    List<Task> getAllByStageForAdmin(String stageName);
+
     Task changeStage(Long taskId, String stageName);
 }
