@@ -70,7 +70,7 @@ public class TaskRestController {
     }
 
     @PutMapping(value = "/update/{id}/{stage}")
-    @Operation(summary = "Оновити завдання")
+    @Operation(summary = "Оновити стадію виконання завдання")
     public ResponseEntity<TaskDto> updateTask(
             @PathVariable(value = "id") Long id,
             @PathVariable(value = "stage") String stageName) {
