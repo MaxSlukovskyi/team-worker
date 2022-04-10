@@ -91,8 +91,8 @@ public class TaskAdminRestController {
     @GetMapping(value = "/get/all/{id}/{time1}/{time2}")
     @Operation(summary = "Отримати всі завдання працівника за певний період")
     public ResponseEntity<List<TaskDto>> getAllByAssigneeAndCreateTime(@PathVariable(value = "id") Long id,
-                                                                       @PathVariable(value = "time1") String time1,
-                                                                       @PathVariable(value = "time2") String time2) throws ParseException {
+                                                                       @RequestBody String time1,
+                                                                       @RequestBody String time2) throws ParseException {
         List<Task> tasks = taskService.getAllByAssigneeAndCreateTime(id, time1, time2);
         List<TaskDto> result = new ArrayList<>();
 
