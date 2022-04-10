@@ -25,7 +25,7 @@ public class TaskServiceImpl implements TaskService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserService userService;
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy,hh:mm:ss");
 
 
     @Override
