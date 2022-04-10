@@ -21,9 +21,9 @@ public interface TaskService {
 
     Task getById(Long id);
 
-    List<Task> getAllByStage(String stageName);
+    List<Task> getAllByStage(String stageName) throws ParseException;
 
-    List<Task> getAllByStageForAdmin(String stageName);
+    List<Task> getAllByStageForAdmin(String stageName) throws ParseException;
 
     Task changeStage(Long taskId, String stageName);
 }

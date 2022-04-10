@@ -77,7 +77,7 @@ public class TaskAdminRestController {
 
     @GetMapping(value = "/get/all/{stage}")
     @Operation(summary = "Отримати всі завдання за стадією для адміністратора")
-    public ResponseEntity<List<TaskDto>> getAllByStage(@PathVariable(value = "stage") String stageName) {
+    public ResponseEntity<List<TaskDto>> getAllByStage(@PathVariable(value = "stage") String stageName) throws ParseException {
         List<Task> tasks = taskService.getAllByStageForAdmin(stageName);
         List<TaskDto> result = tasks.stream().map(TaskDto::fromTask).collect(Collectors.toList());
         return new ResponseEntity<>(result, HttpStatus.OK);

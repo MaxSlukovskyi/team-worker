@@ -33,6 +33,8 @@ public class TaskServiceImpl implements TaskService {
             return null;
         }
 
+        task.setOverdue(false);
+
         log.info("IN add - {} task added", task.getName());
         return taskRepository.save(task);
     }
@@ -58,15 +60,25 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getAllByStage(String stageName) {
+    public List<Task> getAllByStage(String stageName) throws ParseException {
         List<Task> tasks = taskRepository.getAllByAssigneeAndStage(userService.getCurrentUser(), TaskStage.valueOf(stageName));
+        for (Task task : tasks) {
+            if (dateFormat.parse(task.getDueTime()).before(dateFormat.parse(task.getCreateTime()))) {
+                task.setOverdue(true);
+            }
+        }
         log.info("IN getAllByStage - {} tasks added", tasks.size());
         return tasks;
     }
 
     @Override
-    public List<Task> getAllByStageForAdmin(String stageName) {
+    public List<Task> getAllByStageForAdmin(String stageName) throws ParseException {
         List<Task> tasks = taskRepository.getAllByStage(TaskStage.valueOf(stageName));
+        for (Task task : tasks) {
+            if (dateFormat.parse(task.getDueTime()).before(dateFormat.parse(task.getCreateTime()))) {
+                task.setOverdue(true);
+            }
+        }
         log.info("IN getAllByStageForAdmin - {} tasks added", tasks.size());
         return tasks;
     }

@@ -91,8 +91,8 @@ public class UserAdminRestController {
     @Operation(summary = "Видалити користувача")
     public ResponseEntity<UserDto> deleteUser(@PathVariable(value = "id") Long id) {
 
-        if(userService.getById(id) == null && userService.getById(id).getAssignedTasks() != null
-        && userService.getById(id).getCreatedTasks() != null) {
+        if(userService.getById(id) == null || !userService.getById(id).getAssignedTasks().isEmpty()
+        || !userService.getById(id).getCreatedTasks().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
