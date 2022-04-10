@@ -11,7 +11,7 @@ public interface TaskService {
 
     Task add(Task task) throws ParseException;
 
-    List<Task> getAll();
+    List<Task> getAll() throws ParseException;
 
     Task update(Long id, Task task) throws ParseException;
 

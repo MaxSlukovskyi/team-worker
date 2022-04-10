@@ -53,8 +53,13 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getAll() {
+    public List<Task> getAll() throws ParseException {
         List<Task> tasks = taskRepository.findAll();
+        for (Task task : tasks) {
+            if (dateFormat.parse(task.getDueTime()).before(dateFormat.parse(task.getCreateTime()))) {
+                task.setOverdue(true);
+            }
+        }
         log.info("IN getAll - {} tasks added", tasks.size());
         return tasks;
     }
