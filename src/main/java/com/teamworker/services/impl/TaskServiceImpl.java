@@ -25,7 +25,7 @@ public class TaskServiceImpl implements TaskService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserService userService;
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
 
     @Override
@@ -186,8 +186,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getAllByAssigneeAndCreateTime(Long id, String time1, String time2) {
-        List<Task> tasks = taskRepository.getAllByAssigneeIdAndCreateTimeBetween(id, time1, time2);
+    public List<Task> getAllByAssigneeAndCreateTime(Long id, String time1, String time2) throws ParseException {
+        Timestamp parsedTime1 = new Timestamp(dateFormat.parse(time1).getTime());
+        Timestamp parsedTime2 = new Timestamp(dateFormat.parse(time2).getTime());
+        List<Task> tasks = taskRepository.getAllByAssigneeIdAndCreateTimeBetween(id, parsedTime1, parsedTime2);
         log.info("IN getAllByAssigneeAndCreateTime - {} tasks found", tasks.size());
         return tasks;
     }
