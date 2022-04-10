@@ -56,8 +56,9 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAll() throws ParseException {
         List<Task> tasks = taskRepository.findAll();
         for (Task task : tasks) {
-            if (new Date().before(dateFormat.parse(task.getDueTime()))) {
+            if (dateFormat.parse(task.getDueTime()).before(new Date())) {
                 task.setOverdue(true);
+                taskRepository.save(task);
             }
         }
         log.info("IN getAll - {} tasks added", tasks.size());
@@ -68,8 +69,9 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAllByStage(String stageName) throws ParseException {
         List<Task> tasks = taskRepository.getAllByAssigneeAndStage(userService.getCurrentUser(), TaskStage.valueOf(stageName));
         for (Task task : tasks) {
-            if (new Date().before(dateFormat.parse(task.getDueTime()))) {
+            if (dateFormat.parse(task.getDueTime()).before(new Date())) {
                 task.setOverdue(true);
+                taskRepository.save(task);
             }
         }
         log.info("IN getAllByStage - {} tasks added", tasks.size());
@@ -80,8 +82,9 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAllByStageForAdmin(String stageName) throws ParseException {
         List<Task> tasks = taskRepository.getAllByStage(TaskStage.valueOf(stageName));
         for (Task task : tasks) {
-            if (new Date().before(dateFormat.parse(task.getDueTime()))) {
+            if (dateFormat.parse(task.getDueTime()).before(new Date())) {
                 task.setOverdue(true);
+                taskRepository.save(task);
             }
         }
         log.info("IN getAllByStageForAdmin - {} tasks added", tasks.size());
