@@ -93,7 +93,7 @@ public class TaskAdminRestController {
     @Operation(summary = "Отримати всі завдання працівника за певний період")
     public ResponseEntity<List<TaskDto>> getAllByAssigneeAndCreateTime(@PathVariable(value = "id") Long id,
                                                                        @RequestBody StatisticsDto statisticsDto) throws ParseException {
-        List<Task> tasks = taskService.getAllByAssigneeAndCreateTime(id, statisticsDto.getTime1(), statisticsDto.getTime1());
+        List<Task> tasks = taskService.getAllByAssigneeAndCreateTime(id, statisticsDto.getTime1(), statisticsDto.getTime2());
         List<TaskDto> result = new ArrayList<>();
 
         for (Task task : tasks) {

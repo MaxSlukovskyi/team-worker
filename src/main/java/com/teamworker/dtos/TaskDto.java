@@ -77,7 +77,7 @@ public class TaskDto {
     }
 
     public static TaskDto fromTask(Task task) throws ParseException {
-        SimpleDateFormat getDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat getDateFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm:ss");
 
         TaskDto taskDto = new TaskDto();
