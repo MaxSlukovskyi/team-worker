@@ -77,6 +77,7 @@ public class TaskDto {
     }
 
     public static TaskDto fromTask(Task task) throws ParseException {
+        SimpleDateFormat getDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm:ss");
 
         TaskDto taskDto = new TaskDto();
@@ -84,7 +85,7 @@ public class TaskDto {
         taskDto.setName(task.getName());
         taskDto.setDescription(task.getDescription());
         taskDto.setCreateTime(simpleDateFormat.format(task.getCreateTime()));
-        taskDto.setDueTime(simpleDateFormat.format(task.getDueTime()));
+        taskDto.setDueTime(getDateFormat.format(task.getDueTime()));
         taskDto.setLastEditTime(simpleDateFormat.format(task.getLastEditTime()));
         taskDto.setStartTime(task.getStartTime() == null ? "" : simpleDateFormat.format(task.getStartTime()));
         taskDto.setEndTime(task.getEndTime() == null ? "" : simpleDateFormat.format(task.getEndTime()));
