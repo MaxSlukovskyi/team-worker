@@ -86,8 +86,8 @@ public class TaskDto {
         taskDto.setCreateTime(simpleDateFormat.format(task.getCreateTime()));
         taskDto.setDueTime(simpleDateFormat.format(task.getDueTime()));
         taskDto.setLastEditTime(simpleDateFormat.format(task.getLastEditTime()));
-        taskDto.setStartTime(simpleDateFormat.format(task.getStartTime()));
-        taskDto.setEndTime(simpleDateFormat.format(task.getEndTime()));
+        taskDto.setStartTime(task.getStartTime() == null ? "" : simpleDateFormat.format(task.getStartTime()));
+        taskDto.setEndTime(task.getEndTime() == null ? "" : simpleDateFormat.format(task.getEndTime()));
         taskDto.setAssignee(UserDto.fromUser(task.getAssignee()));
         taskDto.setCreator(UserDto.fromUser(task.getCreator()));
         taskDto.setProject(task.getProject());
