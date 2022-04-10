@@ -46,12 +46,6 @@ public class TaskDto {
         Date parseLastEditTimeDate = simpleDateFormat.parse(lastEditTime);
         Timestamp parsedLastEditTime = new java.sql.Timestamp(parseLastEditTimeDate.getTime());
 
-        Date parseStartTimeDate = simpleDateFormat.parse(startTime);
-        Timestamp parsedStartTime = new java.sql.Timestamp(parseStartTimeDate.getTime());
-
-        Date parseEndTimeDate = simpleDateFormat.parse(endTime);
-        Timestamp parsedEndTime = new java.sql.Timestamp(parseEndTimeDate.getTime());
-
         Task task = new Task();
 
         task.setId(id);
@@ -60,8 +54,18 @@ public class TaskDto {
         task.setCreateTime(parsedCreateTime);
         task.setDueTime(parsedGetDueTime);
         task.setLastEditTime(parsedLastEditTime);
-        task.setStartTime(parsedStartTime);
-        task.setEndTime(parsedEndTime);
+        if (startTime != null && !startTime.isEmpty()) {
+            Date parseStartTimeDate = simpleDateFormat.parse(startTime);
+            Timestamp parsedStartTime = new java.sql.Timestamp(parseStartTimeDate.getTime());
+            task.setStartTime(parsedStartTime);
+        }
+        task.setStartTime(null);
+        if (endTime != null && !endTime.isEmpty()) {
+            Date parseEndTimeDate = simpleDateFormat.parse(endTime);
+            Timestamp parsedEndTime = new java.sql.Timestamp(parseEndTimeDate.getTime());
+            task.setEndTime(parsedEndTime);
+        }
+        task.setEndTime(null);
         task.setAssignee(assignee.toUser());
         task.setCreator(creator.toUser());
         task.setProject(project);
