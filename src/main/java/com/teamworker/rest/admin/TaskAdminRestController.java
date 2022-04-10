@@ -40,7 +40,7 @@ public class TaskAdminRestController {
 
     @GetMapping(value = "get/all")
     @Operation(summary = "Отримати всі завдання доступних проектів")
-    public ResponseEntity<List<TaskDto>> getAll() {
+    public ResponseEntity<List<TaskDto>> getAll() throws ParseException {
 
         List<Task> tasks = taskService.getAll();
 
