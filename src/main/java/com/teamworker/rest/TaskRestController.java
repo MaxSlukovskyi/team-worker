@@ -39,13 +39,6 @@ public class TaskRestController {
     @PostMapping(value = "/add")
     @Operation(summary = "Додати завдання")
     public ResponseEntity<TaskDto> addTask(@RequestBody TaskDto taskDto) throws ParseException {
-
-        taskDto.setDueTime(taskDto.getDueTime().replace('T', ' '));
-        Timestamp parsedGetDueTime = new Timestamp(getDateFormat.parse(taskDto.getDueTime()).getTime());
-        String parsedSetDueTime = setDateFormat.format(parsedGetDueTime.getTime());
-
-        taskDto.setDueTime(parsedSetDueTime);
-
         Task task = taskService.add(taskDto.toTask());
         if(task == null) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
