@@ -89,7 +89,7 @@ public class TaskAdminRestController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/get/all/{id}/{time1}/{time2}")
+    @PostMapping(value = "/get/all/{id}")
     @Operation(summary = "Отримати всі завдання працівника за певний період")
     public ResponseEntity<List<TaskDto>> getAllByAssigneeAndCreateTime(@PathVariable(value = "id") Long id,
                                                                        @RequestBody StatisticsDto statisticsDto) throws ParseException {
