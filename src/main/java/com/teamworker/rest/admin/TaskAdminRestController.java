@@ -1,6 +1,7 @@
 package com.teamworker.rest.admin;
 
 import com.teamworker.dtos.ProjectDto;
+import com.teamworker.dtos.StatisticsDto;
 import com.teamworker.dtos.TaskDto;
 import com.teamworker.models.Project;
 import com.teamworker.models.Task;
@@ -91,9 +92,8 @@ public class TaskAdminRestController {
     @GetMapping(value = "/get/all/{id}/{time1}/{time2}")
     @Operation(summary = "Отримати всі завдання працівника за певний період")
     public ResponseEntity<List<TaskDto>> getAllByAssigneeAndCreateTime(@PathVariable(value = "id") Long id,
-                                                                       @PathVariable(value = "time1") String time1,
-                                                                       @PathVariable(value = "time2") String time2) throws ParseException {
-        List<Task> tasks = taskService.getAllByAssigneeAndCreateTime(id, time1, time2);
+                                                                       @RequestBody StatisticsDto statisticsDto) throws ParseException {
+        List<Task> tasks = taskService.getAllByAssigneeAndCreateTime(id, statisticsDto.getTime1(), statisticsDto.getTime1());
         List<TaskDto> result = new ArrayList<>();
 
         for (Task task : tasks) {
