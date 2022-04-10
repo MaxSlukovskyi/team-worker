@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +33,7 @@ public class TaskAdminRestController {
     private final TaskService taskService;
     private final SimpleDateFormat getDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     private final SimpleDateFormat setDateFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm");
+    private final SimpleDateFormat statisticsDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
     @Autowired
     public TaskAdminRestController(TaskService taskService) {
@@ -48,7 +50,11 @@ public class TaskAdminRestController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-        List<TaskDto> result = tasks.stream().map(TaskDto::fromTask).collect(Collectors.toList());
+        List<TaskDto> result = new ArrayList<>();
+
+        for (Task task : tasks) {
+            result.add(TaskDto.fromTask(task));
+        }
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -58,12 +64,6 @@ public class TaskAdminRestController {
     public ResponseEntity<TaskDto> updateTask(
             @PathVariable(value = "id") Long id,
             @RequestBody TaskDto taskDto) throws ParseException {
-
-        taskDto.setDueTime(taskDto.getDueTime().replace('T', ' '));
-        Timestamp parsedGetDueTime = new Timestamp(getDateFormat.parse(taskDto.getDueTime()).getTime());
-        String parsedSetDueTime = setDateFormat.format(parsedGetDueTime.getTime());
-
-        taskDto.setDueTime(parsedSetDueTime);
 
         Task task = taskService.update(id, taskDto.toTask());
 
@@ -79,8 +79,26 @@ public class TaskAdminRestController {
     @Operation(summary = "Отримати всі завдання за стадією для адміністратора")
     public ResponseEntity<List<TaskDto>> getAllByStage(@PathVariable(value = "stage") String stageName) throws ParseException {
         List<Task> tasks = taskService.getAllByStageForAdmin(stageName);
-        List<TaskDto> result = tasks.stream().map(TaskDto::fromTask).collect(Collectors.toList());
+        List<TaskDto> result = new ArrayList<>();
+
+        for (Task task : tasks) {
+            result.add(TaskDto.fromTask(task));
+        }
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/get/all/{id}/{time1}/{time2}")
+    @Operation(summary = "Отримати всі завдання працівника за певний період")
+    public ResponseEntity<List<TaskDto>> getAllByAssigneeAndCreateTime(@PathVariable(value = "id") Long id,
+                                                                       @PathVariable(value = "time1") String time1,
+                                                                       @PathVariable(value = "time2") String time2) throws ParseException {
+        List<Task> tasks = taskService.getAllByAssigneeAndCreateTime(id, time1, time2);
+        List<TaskDto> result = new ArrayList<>();
+
+        for (Task task : tasks) {
+            result.add(TaskDto.fromTask(task));
+        }
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }

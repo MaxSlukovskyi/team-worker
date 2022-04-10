@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,7 +58,11 @@ public class TaskRestController {
     @Operation(summary = "Отримати всі завдання за стадією")
     public ResponseEntity<List<TaskDto>> getAllByStage(@PathVariable(value = "stage") String stageName) throws ParseException {
         List<Task> tasks = taskService.getAllByStage(stageName);
-        List<TaskDto> result = tasks.stream().map(TaskDto::fromTask).collect(Collectors.toList());
+        List<TaskDto> result = new ArrayList<>();
+
+        for (Task task : tasks) {
+            result.add(TaskDto.fromTask(task));
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -65,7 +70,7 @@ public class TaskRestController {
     @Operation(summary = "Оновити стадію виконання завдання")
     public ResponseEntity<TaskDto> updateTask(
             @PathVariable(value = "id") Long id,
-            @PathVariable(value = "stage") String stageName) {
+            @PathVariable(value = "stage") String stageName) throws ParseException {
 
         Task task = taskService.changeStage(id, stageName);
 
