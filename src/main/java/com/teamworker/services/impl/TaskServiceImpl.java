@@ -4,6 +4,7 @@ import com.teamworker.models.*;
 import com.teamworker.models.enums.TaskStage;
 import com.teamworker.repositories.RoleRepository;
 import com.teamworker.repositories.TaskRepository;
+import com.teamworker.repositories.UserRepository;
 import com.teamworker.services.TaskService;
 import com.teamworker.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,17 +22,20 @@ import java.util.*;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
+    private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final UserService userService;
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy, HH:mm");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy, hh:mm:ss");
 
 
     @Override
     public Task add(Task task) throws ParseException {
 
-        if (dateFormat.parse(task.getDueTime()).before(dateFormat.parse(task.getCreateTime()))) {
+        if (task.getDueTime().before(task.getCreateTime())) {
             return null;
         }
+
+        task.setOverdue(false);
 
         log.info("IN add - {} task added", task.getName());
         return taskRepository.save(task);
@@ -51,22 +55,40 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getAll() {
+    public List<Task> getAll() throws ParseException {
         List<Task> tasks = taskRepository.findAll();
+        for (Task task : tasks) {
+            if (task.getDueTime().before(new Timestamp(new Date().getTime()))) {
+                task.setOverdue(true);
+                taskRepository.save(task);
+            }
+        }
         log.info("IN getAll - {} tasks added", tasks.size());
         return tasks;
     }
 
     @Override
-    public List<Task> getAllByStage(String stageName) {
+    public List<Task> getAllByStage(String stageName) throws ParseException {
         List<Task> tasks = taskRepository.getAllByAssigneeAndStage(userService.getCurrentUser(), TaskStage.valueOf(stageName));
+        for (Task task : tasks) {
+            if (task.getDueTime().before(new Timestamp(new Date().getTime()))) {
+                task.setOverdue(true);
+                taskRepository.save(task);
+            }
+        }
         log.info("IN getAllByStage - {} tasks added", tasks.size());
         return tasks;
     }
 
     @Override
-    public List<Task> getAllByStageForAdmin(String stageName) {
+    public List<Task> getAllByStageForAdmin(String stageName) throws ParseException {
         List<Task> tasks = taskRepository.getAllByStage(TaskStage.valueOf(stageName));
+        for (Task task : tasks) {
+            if (task.getDueTime().before(new Timestamp(new Date().getTime()))) {
+                task.setOverdue(true);
+                taskRepository.save(task);
+            }
+        }
         log.info("IN getAllByStageForAdmin - {} tasks added", tasks.size());
         return tasks;
     }
@@ -80,10 +102,10 @@ public class TaskServiceImpl implements TaskService {
         }
 
         if (Objects.equals(stageName, TaskStage.IN_PROGRESS.name())) {
-            task.setStartTime(dateFormat.format(new Date()));
+            task.setStartTime(new Timestamp(new Date().getTime()));
         }
         else if (Objects.equals(stageName, TaskStage.ON_REVIEW.name())) {
-            task.setEndTime(dateFormat.format(new Date()));
+            task.setEndTime(new Timestamp(new Date().getTime()));
         }
 
         task.setStage(TaskStage.valueOf(stageName));
@@ -124,7 +146,7 @@ public class TaskServiceImpl implements TaskService {
 //            return null;
 //        }
 
-        if (dateFormat.parse(task.getDueTime()).before(dateFormat.parse(task.getCreateTime()))) {
+        if (task.getDueTime().before(task.getCreateTime())) {
             return null;
         }
 
@@ -163,4 +185,12 @@ public class TaskServiceImpl implements TaskService {
         return tasks;
     }
 
+    @Override
+    public List<Task> getAllByAssigneeAndCreateTime(Long id, String time1, String time2) throws ParseException {
+        Timestamp parsedTime1 = new Timestamp(dateFormat.parse(time1).getTime());
+        Timestamp parsedTime2 = new Timestamp(dateFormat.parse(time2).getTime());
+        List<Task> tasks = taskRepository.getAllByAssigneeIdAndCreateTimeBetween(id, parsedTime1, parsedTime2);
+        log.info("IN getAllByAssigneeAndCreateTime - {} tasks found", tasks.size());
+        return tasks;
+    }
 }

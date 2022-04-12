@@ -72,7 +72,7 @@ public class UserAdminRestController {
     }
 
     @PutMapping(value = "/add/position/{id}")
-    @Operation(summary = "Оновити користувача")
+    @Operation(summary = "Додати користувачу посаду")
     public ResponseEntity<UserDto> addPosition(
             @PathVariable(value = "id") Long id,
             @RequestBody PositionDto positionDto) throws ParseException {
@@ -87,12 +87,31 @@ public class UserAdminRestController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @PutMapping(value = "/delete/{id}/position")
+    @Operation(summary = "Видалити користувачу посаду")
+    public ResponseEntity<UserDto> deletePosition(
+            @PathVariable(value = "id") Long id,
+            @RequestBody PositionDto positionDto) throws ParseException {
+
+        User user = userService.deletePosition(id, positionDto.toPosition());
+
+        if(user == null) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        UserDto result = UserDto.fromUser(user);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @DeleteMapping(value = "/delete/{id}")
     @Operation(summary = "Видалити користувача")
     public ResponseEntity<UserDto> deleteUser(@PathVariable(value = "id") Long id) {
-        if(userService.getById(id) == null) {
+
+        if(userService.getById(id) == null || !userService.getById(id).getAssignedTasks().isEmpty()
+        || !userService.getById(id).getCreatedTasks().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
+
         userService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
