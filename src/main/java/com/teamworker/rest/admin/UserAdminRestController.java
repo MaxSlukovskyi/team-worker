@@ -71,6 +71,22 @@ public class UserAdminRestController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @PutMapping(value = "/update/role/{id}")
+    @Operation(summary = "Змінити роль користувача")
+    public ResponseEntity<UserDto> updateUserRole(
+            @PathVariable(value = "id") Long id,
+            @RequestBody String role) {
+
+        User user = userService.updateRole(id, role);
+
+        if(user == null) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        UserDto result = UserDto.fromUser(user);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @PutMapping(value = "/add/position/{id}")
     @Operation(summary = "Додати користувачу посаду")
     public ResponseEntity<UserDto> addPosition(
@@ -87,7 +103,7 @@ public class UserAdminRestController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/delete/{id}/position")
+    @PutMapping(value = "/delete/position/{id}")
     @Operation(summary = "Видалити користувачу посаду")
     public ResponseEntity<UserDto> deletePosition(
             @PathVariable(value = "id") Long id,

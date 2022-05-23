@@ -91,4 +91,14 @@ public class ProjectServiceImpl implements ProjectService {
         log.info("IN getById {} project found", project.getName());
         return project;
     }
+
+    @Override
+    public List<Project> getAllByManager(Long id) {
+        List<Project> projects = projectRepository.getAllByManagerId(id);
+        if(projects.isEmpty()) {
+            return null;
+        }
+        log.info("IN getAllByManager - {} projects found", projects.size());
+        return projects;
+    }
 }
