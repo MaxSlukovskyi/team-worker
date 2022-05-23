@@ -31,4 +31,6 @@ public interface UserService {
     User addPosition(Long id, Position position);
 
     User deletePosition(Long id, Position position);
+
+    User updateRole(Long id, String role);
 }

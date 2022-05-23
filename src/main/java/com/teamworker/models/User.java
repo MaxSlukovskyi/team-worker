@@ -53,4 +53,7 @@ public class User {
     @OneToMany(mappedBy = "creator")
     @JsonIgnore
     private List<Task> createdTasks;
+
+    @OneToMany(mappedBy = "manager")
+    private List<Project> managerProjects;
 }

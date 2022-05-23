@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @RestController
 @CrossOrigin(origins = "http://localhost:4200/")
 @RequestMapping(value = "/api/v1/admin/projects")
-@Tag(name = "/api/v1/admin/projects", description = "Контролер для керування проектами")
+@Tag(name = "/api/v1/admin/projects", description = "Контролер для керування проектами (admin)")
 public class ProjectAdminRestController {
 
     private final ProjectService projectService;

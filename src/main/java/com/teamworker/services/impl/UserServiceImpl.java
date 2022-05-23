@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -105,8 +106,27 @@ public class UserServiceImpl implements UserService {
         foundUser.setName(user.getName());
         foundUser.setSurname(user.getSurname());
 
-        log.info("IN update - {} project updated", user.getId());
+        log.info("IN update - user with id = {} updated", user.getId());
 
+        return userRepository.save(foundUser);
+    }
+
+    @Override
+    public User updateRole(Long id, String role) {
+        User foundUser = userRepository.findById(id).orElse(null);
+        if(foundUser == null) {
+            return null;
+        }
+
+        Role foundRole = roleRepository.findByName(role);
+        if(foundRole == null) {
+            return null;
+        }
+        List<Role> roles = new ArrayList<>();
+        roles.add(foundRole);
+
+        foundUser.setRoles(roles);
+        log.info("IN updateRole - user with id = {} updated", foundUser.getId());
         return userRepository.save(foundUser);
     }
 
