@@ -64,9 +64,11 @@ public class ProjectServiceImpl implements ProjectService {
         prevManager.getPosition().remove(managerPosition);
         userRepository.save(prevManager);
 
-        project.getManager().getPosition().add(managerPosition);
+        User newManager = userService.getById(project.getManager().getId());
+        newManager.getPosition().add(managerPosition);
+        User savedManager = userRepository.save(newManager);
 
-        foundProject.setManager(userService.getById(project.getManager().getId()));
+        foundProject.setManager(savedManager);
 
 
         log.info("IN update - {} project updated", project.getId());
