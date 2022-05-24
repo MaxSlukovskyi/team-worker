@@ -5,6 +5,7 @@ import com.teamworker.models.Project;
 import com.teamworker.models.User;
 import com.teamworker.repositories.PositionRepository;
 import com.teamworker.repositories.ProjectRepository;
+import com.teamworker.repositories.UserRepository;
 import com.teamworker.services.ProjectService;
 import com.teamworker.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.List;
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final UserRepository userRepository;
     private final PositionRepository positionRepository;
     private final UserService userService;
 
@@ -31,12 +33,11 @@ public class ProjectServiceImpl implements ProjectService {
         Position position = new Position();
         position.setName("Керівник проекту");
         position.setProject(savedProject);
+        Position savedPosition = positionRepository.save(position);
 
-        List<User> users = new ArrayList<>();
-        users.add(savedProject.getManager());
-        position.setUsers(users);
-
-        positionRepository.save(position);
+        User manager = savedProject.getManager();
+        manager.getPosition().add(savedPosition);
+        userRepository.save(manager);
 
         log.info("IN add - {} position added", position.getName());
         return savedProject;
