@@ -2,7 +2,9 @@ package com.teamworker.rest.admin;
 
 import com.teamworker.dtos.PositionDto;
 import com.teamworker.dtos.ProjectDto;
+import com.teamworker.models.Position;
 import com.teamworker.models.Project;
+import com.teamworker.models.User;
 import com.teamworker.services.ProjectService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -55,6 +57,7 @@ public class ProjectAdminRestController {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
         ProjectDto result = ProjectDto.fromProject(project);
+
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 

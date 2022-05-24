@@ -27,13 +27,17 @@ public class ProjectServiceImpl implements ProjectService {
     public Project add(Project project) {
         Project savedProject = projectRepository.save(project);
         log.info("IN add - {} project added", project.getName());
+
         Position position = new Position();
-        position.setName("Administrator");
+        position.setName("Керівник проекту");
         position.setProject(savedProject);
+
         List<User> users = new ArrayList<>();
-        users.add(userService.getCurrentUser());
+        users.add(savedProject.getManager());
         position.setUsers(users);
+
         positionRepository.save(position);
+
         log.info("IN add - {} position added", position.getName());
         return savedProject;
     }
