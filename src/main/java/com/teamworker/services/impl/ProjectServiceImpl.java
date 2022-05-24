@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -35,7 +36,7 @@ public class ProjectServiceImpl implements ProjectService {
         position.setProject(savedProject);
         Position savedPosition = positionRepository.save(position);
 
-        User manager = savedProject.getManager();
+        User manager = userService.getById(savedProject.getManager().getId());
         manager.getPosition().add(savedPosition);
         userRepository.save(manager);
 
@@ -53,6 +54,20 @@ public class ProjectServiceImpl implements ProjectService {
         foundProject.setCreateTime(project.getCreateTime());
         foundProject.setProjectType(project.getProjectType());
         foundProject.setProjectStage(project.getProjectStage());
+
+        User prevManager = userService.getById(foundProject.getManager().getId());
+
+        Position managerPosition = foundProject.getPositions().stream()
+                .filter(position -> position.getName().equals("Керівник проекту"))
+                .collect(Collectors.toList()).get(0);
+
+        prevManager.getPosition().remove(managerPosition);
+        userRepository.save(prevManager);
+
+        project.getManager().getPosition().add(managerPosition);
+
+        foundProject.setManager(userService.getById(project.getManager().getId()));
+
 
         log.info("IN update - {} project updated", project.getId());
 
