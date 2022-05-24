@@ -64,9 +64,9 @@ public class UserServiceImpl implements UserService {
     public List<User> getAllManagers() {
         List<User> users = userRepository.findAll();
         Role roleManager = roleRepository.findByName("ROLE_MANAGER");
-        users.stream().filter(user -> (user.getRoles().contains(roleManager))).collect(Collectors.toList());
-        log.info("IN getAllManagers - {} users found", users.size());
-        return users;
+        List<User> managers = users.stream().filter(user -> (user.getRoles().contains(roleManager))).collect(Collectors.toList());
+        log.info("IN getAllManagers - {} users found", managers.size());
+        return managers;
     }
 
     @Override
