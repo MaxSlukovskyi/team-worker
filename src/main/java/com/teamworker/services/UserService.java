@@ -12,6 +12,8 @@ public interface UserService {
 
     List<User> getAll();
 
+    List<User> getAllManagers();
+
     User findByUsername(String username);
 
     User getById(Long id);

@@ -29,19 +29,6 @@ public class UserAdminRestController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "get/all")
-    @Operation(summary = "Отримати всіх користувачів")
-    public ResponseEntity<List<UserDto>> getAll() {
-        List<User> users = userService.getAll();
-
-        if (users == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        List<UserDto> result = users.stream().map(UserDto::fromUser).collect(Collectors.toList());
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
     @GetMapping(value = "get/{id}")
     @Operation(summary = "Отримати користувача за id")
     public ResponseEntity<UserDto> getUserById(@PathVariable(name = "id") Long id) {
@@ -51,6 +38,19 @@ public class UserAdminRestController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         UserDto result = UserDto.fromUser(user);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "get/all/managers")
+    @Operation(summary = "Отримати всіх менеджерів")
+    public ResponseEntity<List<UserDto>> getAllManagers() {
+        List<User> users = userService.getAllManagers();
+
+        if (users == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        List<UserDto> result = users.stream().map(UserDto::fromUser).collect(Collectors.toList());
 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
