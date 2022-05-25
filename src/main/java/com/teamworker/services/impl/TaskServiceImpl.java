@@ -16,6 +16,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.teamworker.models.enums.TaskStage.*;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -71,7 +73,8 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAllByStage(String stageName) throws ParseException {
         List<Task> tasks = taskRepository.getAllByAssigneeAndStage(userService.getCurrentUser(), TaskStage.valueOf(stageName));
         for (Task task : tasks) {
-            if (task.getDueTime().before(new Timestamp(new Date().getTime()))) {
+            if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
+                    (task.getStage() == RELEASED || task.getStage() == IN_PROGRESS)) {
                 task.setOverdue(true);
                 taskRepository.save(task);
             }
@@ -104,7 +107,7 @@ public class TaskServiceImpl implements TaskService {
         if (Objects.equals(stageName, TaskStage.IN_PROGRESS.name())) {
             task.setStartTime(new Timestamp(new Date().getTime()));
         }
-        else if (Objects.equals(stageName, TaskStage.ON_REVIEW.name())) {
+        else if (Objects.equals(stageName, ON_REVIEW.name())) {
             task.setEndTime(new Timestamp(new Date().getTime()));
         }
 

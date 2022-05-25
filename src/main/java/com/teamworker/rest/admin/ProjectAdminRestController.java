@@ -38,17 +38,6 @@ public class ProjectAdminRestController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/get/{id}")
-    @Operation(summary = "Отримати проект за ідентифікатором")
-    public ResponseEntity<ProjectDto> getProjectById(@PathVariable(value = "id") Long id) {
-        Project project = projectService.getById(id);
-        if(project == null) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-        ProjectDto result = ProjectDto.fromProject(project);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
     @PostMapping(value = "/add")
     @Operation(summary = "Додати проект")
     public ResponseEntity<ProjectDto> addProject(@RequestBody ProjectDto projectDto) {
@@ -59,22 +48,6 @@ public class ProjectAdminRestController {
         ProjectDto result = ProjectDto.fromProject(project);
 
         return new ResponseEntity<>(result, HttpStatus.CREATED);
-    }
-
-    @PutMapping(value = "/update/{id}")
-    @Operation(summary = "Оновити проект")
-    public ResponseEntity<ProjectDto> updateProject(
-            @PathVariable(value = "id") Long id,
-            @RequestBody ProjectDto projectDto) {
-
-        Project project = projectService.update(id, projectDto.toProject());
-
-        if(project == null) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-
-        ProjectDto result = ProjectDto.fromProject(project);
-        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/delete/{id}")

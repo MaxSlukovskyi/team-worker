@@ -29,19 +29,6 @@ public class UserAdminRestController {
         this.userService = userService;
     }
 
-    @GetMapping(value = "get/{id}")
-    @Operation(summary = "Отримати користувача за id")
-    public ResponseEntity<UserDto> getUserById(@PathVariable(name = "id") Long id) {
-        User user = userService.getById(id);
-
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        UserDto result = UserDto.fromUser(user);
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
     @GetMapping(value = "get/all/managers")
     @Operation(summary = "Отримати всіх менеджерів")
     public ResponseEntity<List<UserDto>> getAllManagers() {
@@ -78,38 +65,6 @@ public class UserAdminRestController {
             @RequestBody String role) {
 
         User user = userService.updateRole(id, role);
-
-        if(user == null) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-
-        UserDto result = UserDto.fromUser(user);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @PutMapping(value = "/add/position/{id}")
-    @Operation(summary = "Додати користувачу посаду")
-    public ResponseEntity<UserDto> addPosition(
-            @PathVariable(value = "id") Long id,
-            @RequestBody PositionDto positionDto) throws ParseException {
-
-        User user = userService.addPosition(id, positionDto.toPosition());
-
-        if(user == null) {
-            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
-        }
-
-        UserDto result = UserDto.fromUser(user);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @PutMapping(value = "/delete/position/{id}")
-    @Operation(summary = "Видалити користувачу посаду")
-    public ResponseEntity<UserDto> deletePosition(
-            @PathVariable(value = "id") Long id,
-            @RequestBody PositionDto positionDto) throws ParseException {
-
-        User user = userService.deletePosition(id, positionDto.toPosition());
 
         if(user == null) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);

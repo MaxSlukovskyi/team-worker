@@ -70,7 +70,6 @@ public class ProjectServiceImpl implements ProjectService {
 
         foundProject.setManager(savedManager);
 
-
         log.info("IN update - {} project updated", project.getId());
 
         return projectRepository.save(foundProject);

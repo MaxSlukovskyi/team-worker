@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -90,6 +91,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getAllByManager(Long id) {
+        User manager = this.getById(id);
+        List<User> users = new ArrayList<>();
+
+        manager.getManagerProjects().stream().forEach(
+                project -> project.getPositions().stream().forEach(
+                        position -> users.addAll(position.getUsers())
+                )
+        );
+
+        List<User> usersWithoutDuplicates = new ArrayList<>(new HashSet<>(users));
+        return usersWithoutDuplicates;
+    }
+
+    @Override
     public List<User> findUsersWithPosition(Position position) {
         List<User> users = userRepository.getUsersByPosition(position);
 
@@ -104,12 +120,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(Long id, User user) {
-        User foundUser = userRepository.findById(id).orElse(null);
+        User foundUser = this.getById(id);
         if(foundUser == null) {
             return null;
         }
 
-        User userWithSameUsername = findByUsername(user.getUsername());
+        User userWithSameUsername = this.findByUsername(user.getUsername());
         if (userWithSameUsername != null && userWithSameUsername.getId() != id) {
             return null;
         }
@@ -125,7 +141,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateRole(Long id, String role) {
-        User foundUser = userRepository.findById(id).orElse(null);
+        User foundUser = this.getById(id);
         if(foundUser == null) {
             return null;
         }
@@ -144,7 +160,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User addPosition(Long id, Position position) {
-        User foundUser = userRepository.findById(id).orElse(null);
+        User foundUser = this.getById(id);
         if(foundUser == null) {
             return null;
         }
@@ -157,7 +173,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User deletePosition(Long id, Position position) {
-        User foundUser = userRepository.findById(id).orElse(null);
+        User foundUser = this.getById(id);
         if(foundUser == null) {
             return null;
         }
@@ -190,13 +206,4 @@ public class UserServiceImpl implements UserService {
         return user.getRoles().contains(roleAdmin);
     }
 
-    @Override
-    public boolean isAdminOfProject(User user, Project project) {
-        for (Position position : user.getPosition()) {
-            if (position.getName() == "Administrator" && position.getProject() == project) {
-                return true;
-            }
-        }
-        return false;
-    }
 }

@@ -4,6 +4,7 @@ import com.teamworker.dtos.ProjectDto;
 import com.teamworker.models.Project;
 import com.teamworker.models.User;
 import com.teamworker.services.ProjectService;
+import com.teamworker.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,12 @@ import java.util.stream.Collectors;
 public class ProjectManagerRestController {
 
     private final ProjectService projectService;
+    private final UserService userService;
 
     @Autowired
-    ProjectManagerRestController(ProjectService projectService) {
+    ProjectManagerRestController(ProjectService projectService, UserService userService) {
         this.projectService = projectService;
+        this.userService = userService;
     }
 
     @GetMapping(value = "/get/all/{id}")
@@ -35,4 +38,38 @@ public class ProjectManagerRestController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/get/all")
+    @Operation(summary = "Отримати всі проекти авторизованого менеджера")
+    public ResponseEntity<List<ProjectDto>> getAllByCurrentManager() {
+        List<Project> projects = projectService.getAllByManager(userService.getCurrentUser().getId());
+        List<ProjectDto> result = projects.stream().map(ProjectDto::fromProject).collect(Collectors.toList());
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/get/{id}")
+    @Operation(summary = "Отримати проект за ідентифікатором")
+    public ResponseEntity<ProjectDto> getProjectById(@PathVariable(value = "id") Long id) {
+        Project project = projectService.getById(id);
+        if(project == null) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        ProjectDto result = ProjectDto.fromProject(project);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/update/{id}")
+    @Operation(summary = "Оновити проект")
+    public ResponseEntity<ProjectDto> updateProject(
+            @PathVariable(value = "id") Long id,
+            @RequestBody ProjectDto projectDto) {
+
+        Project project = projectService.update(id, projectDto.toProject());
+
+        if(project == null) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+
+        ProjectDto result = ProjectDto.fromProject(project);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }
