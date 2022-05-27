@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200/")
-@RequestMapping(value = "/api/v1/manager/position")
+@RequestMapping(value = "/api/v1/manager/task")
 @Tag(name = "/api/v1/manager/task", description = "Контролер для керування завданнями (manager)")
 public class TaskManagerRestController {
 
