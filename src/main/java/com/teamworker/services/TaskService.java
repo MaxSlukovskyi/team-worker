@@ -11,7 +11,7 @@ public interface TaskService {
 
     Task add(Task task) throws ParseException;
 
-    List<Task> getAll() throws ParseException;
+    List<Task> getAll();
 
     Task update(Long id, Task task) throws ParseException;
 
@@ -19,11 +19,21 @@ public interface TaskService {
 
     List<Task> getAllByProject(Project project);
 
+    List<Task> getAllByAssignee(Long id);
+
+    Integer getPercentageOfCompletedOnTime(Long id);
+
+    Integer getNumberByAssigneeAndStage(Long id, String stageName);
+
     Task getById(Long id);
 
     List<Task> getAllByStage(String stageName) throws ParseException;
 
+    List<Task> getAllByManager(Long id);
+
     List<Task> getAllByStageForAdmin(String stageName) throws ParseException;
+
+    List<Task> getAllByStageForManager(String stageName, Long id);
 
     Task changeStage(Long taskId, String stageName);
 

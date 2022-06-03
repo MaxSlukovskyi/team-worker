@@ -12,9 +12,15 @@ import java.util.List;
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> getAllByProject(Project project);
 
+    List<Task> getAllByAssigneeId(Long id);
+
+    Integer countTasksByAssigneeIdAndStage(Long id, TaskStage stage);
+
     List<Task> getAllByAssigneeAndStage(User assignee, TaskStage stage);
 
     List<Task> getAllByStage(TaskStage stage);
+
+    List<Task> getAllByStageAndProject_Manager(TaskStage stage, User manager);
 
     List<Task> getAllByAssigneeIdAndCreateTimeBetween(Long assignee_id, Timestamp time1, Timestamp time2);
 }

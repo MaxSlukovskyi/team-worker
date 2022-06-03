@@ -15,6 +15,9 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.teamworker.models.enums.TaskStage.*;
 
 @Service
 @Slf4j
@@ -22,14 +25,12 @@ import java.util.*;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final UserService userService;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy, hh:mm:ss");
 
 
     @Override
-    public Task add(Task task) throws ParseException {
+    public Task add(Task task) {
 
         if (task.getDueTime().before(task.getCreateTime())) {
             return null;
@@ -55,10 +56,29 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getAll() throws ParseException {
+    public List<Task> getAll() {
         List<Task> tasks = taskRepository.findAll();
         for (Task task : tasks) {
-            if (task.getDueTime().before(new Timestamp(new Date().getTime()))) {
+            if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
+                    (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
+                task.setOverdue(true);
+                taskRepository.save(task);
+            }
+        }
+        log.info("IN getAll - {} tasks added", tasks.size());
+        return tasks;
+    }
+
+    public List<Task> getAllByManager(Long id) {
+        User manager = userService.getById(id);
+        List<Task> tasks = new ArrayList<>();
+
+        manager.getManagerProjects().stream().forEach(project ->
+                tasks.addAll(this.getAllByProject(project)));
+
+        for (Task task : tasks) {
+            if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
+                    (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
                 task.setOverdue(true);
                 taskRepository.save(task);
             }
@@ -68,10 +88,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getAllByStage(String stageName) throws ParseException {
-        List<Task> tasks = taskRepository.getAllByAssigneeAndStage(userService.getCurrentUser(), TaskStage.valueOf(stageName));
+    public List<Task> getAllByStage(String stageName) {
+        List<Task> tasks = taskRepository.getAllByAssigneeAndStage(userService.getCurrentUser(),
+                TaskStage.valueOf(stageName));
         for (Task task : tasks) {
-            if (task.getDueTime().before(new Timestamp(new Date().getTime()))) {
+            if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
+                    (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
                 task.setOverdue(true);
                 taskRepository.save(task);
             }
@@ -81,8 +103,22 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getAllByStageForAdmin(String stageName) throws ParseException {
+    public List<Task> getAllByStageForAdmin(String stageName) {
         List<Task> tasks = taskRepository.getAllByStage(TaskStage.valueOf(stageName));
+        for (Task task : tasks) {
+            if (task.getDueTime().before(new Timestamp(new Date().getTime()))) {
+                task.setOverdue(true);
+                taskRepository.save(task);
+            }
+        }
+        log.info("IN getAllByStageForAdmin - {} tasks added", tasks.size());
+        return tasks;
+    }
+
+    @Override
+    public List<Task> getAllByStageForManager(String stageName, Long id) {
+        User manager = userService.getById(id);
+        List<Task> tasks = taskRepository.getAllByStageAndProject_Manager(TaskStage.valueOf(stageName), manager);
         for (Task task : tasks) {
             if (task.getDueTime().before(new Timestamp(new Date().getTime()))) {
                 task.setOverdue(true);
@@ -103,8 +139,12 @@ public class TaskServiceImpl implements TaskService {
 
         if (Objects.equals(stageName, TaskStage.IN_PROGRESS.name())) {
             task.setStartTime(new Timestamp(new Date().getTime()));
+            task.setEndTime(null);
         }
-        else if (Objects.equals(stageName, TaskStage.ON_REVIEW.name())) {
+        else if (Objects.equals(stageName, ON_REVIEW.name())) {
+            if (task.getStartTime() == null) {
+                task.setStartTime(new Timestamp(new Date().getTime()));
+            }
             task.setEndTime(new Timestamp(new Date().getTime()));
         }
 
@@ -114,37 +154,12 @@ public class TaskServiceImpl implements TaskService {
         return task;
     }
 
-    //таски проектів адміна
-//    @Override
-//    public List<Task> getAll() {
-//        User currentUser = userService.getCurrentUser();
-//        List<Position> currentUserPositions = currentUser.getPosition();
-//
-//        List<Task> tasks = new ArrayList<>();
-//        List<Project> projects = new ArrayList<>();
-//        for (Position position : currentUserPositions) {
-//            projects.add(position.getProject());
-//        }
-//        List<Project> projectsWithoutDuplicates = new ArrayList<>(new HashSet<>(projects));
-//        for (Project project : projectsWithoutDuplicates) {
-//            tasks.addAll(this.getAllByProject(project));
-//        }
-//        log.info("IN getAll - {} tasks found", tasks.size());
-//        return tasks;
-//    }
-
     @Override
-    public Task update(Long id, Task task) throws ParseException {
+    public Task update(Long id, Task task) {
         Task foundTask = taskRepository.findById(id).orElse(null);
         if(foundTask == null) {
             return null;
         }
-
-//        if (foundTask.getCreator() != userService.getCurrentUser() ||
-//                !(userService.isAdmin(userService.getCurrentUser()) &&
-//                        userService.isAdminOfProject(userService.getCurrentUser(), foundTask.getProject()))) {
-//            return null;
-//        }
 
         if (task.getDueTime().before(task.getCreateTime())) {
             return null;
@@ -159,6 +174,7 @@ public class TaskServiceImpl implements TaskService {
         foundTask.setPriority(task.getPriority());
         foundTask.setType(task.getType());
         foundTask.setLastEditTime(task.getLastEditTime());
+        foundTask.setOverdue(false);
 
         log.info("IN update - {} task updated", task.getId());
 
@@ -183,6 +199,29 @@ public class TaskServiceImpl implements TaskService {
         List<Task> tasks = taskRepository.getAllByProject(project);
         log.info("IN getAllByProject - {} tasks found", tasks.size());
         return tasks;
+    }
+
+    @Override
+    public List<Task> getAllByAssignee(Long id) {
+        List<Task> tasks = taskRepository.getAllByAssigneeId(id);
+        log.info("IN getAllByAssignee - {} tasks found", tasks.size());
+        return tasks;
+    }
+
+    @Override
+    public Integer getPercentageOfCompletedOnTime(Long id) {
+        List<Task> tasks = this.getAllByAssignee(id);
+        Integer numberOfCompletedTasks = this.getNumberByAssigneeAndStage(id, RELEASED.name());
+        List<Task> tasksOnTime = tasks.stream().filter(
+                task -> (task.getEndTime() != null && task.getEndTime().before(task.getDueTime())
+                        && Objects.equals(task.getStage(), RELEASED)))
+                .collect(Collectors.toList());
+        return Math.toIntExact(Math.round((double) tasksOnTime.size() / numberOfCompletedTasks * 100));
+    }
+
+    @Override
+    public Integer getNumberByAssigneeAndStage(Long id, String stageName) {
+        return taskRepository.countTasksByAssigneeIdAndStage(id, TaskStage.valueOf(stageName));
     }
 
     @Override
