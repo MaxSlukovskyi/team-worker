@@ -213,7 +213,7 @@ public class TaskServiceImpl implements TaskService {
         List<Task> tasks = this.getAllByAssignee(id);
         Integer numberOfCompletedTasks = this.getNumberByAssigneeAndStage(id, RELEASED.name());
         List<Task> tasksOnTime = tasks.stream().filter(
-                task -> (task.getEndTime() == null && task.getEndTime().before(task.getDueTime())
+                task -> (task.getEndTime() != null && task.getEndTime().before(task.getDueTime())
                         && Objects.equals(task.getStage(), RELEASED)))
                 .collect(Collectors.toList());
         return Math.toIntExact(Math.round((double) tasksOnTime.size() / numberOfCompletedTasks * 100));
