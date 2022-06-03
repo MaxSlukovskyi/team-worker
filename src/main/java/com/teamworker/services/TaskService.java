@@ -23,7 +23,7 @@ public interface TaskService {
 
     Integer getPercentageOfCompletedOnTime(Long id);
 
-    Integer getNumberByUserAndStage(Long id, String stageName);
+    Integer getNumberByAssigneeAndStage(Long id, String stageName);
 
     Task getById(Long id);
 

@@ -88,7 +88,7 @@ public class TaskRestController {
     @GetMapping(value = "/get/stats/number/{stage}")
     @Operation(summary = "Отримати кількість завдань авторизованого користувача за стадією")
     public ResponseEntity<Integer> getNumberByUserAndStage(@PathVariable(value = "stage") String stageName) {
-        Integer number = taskService.getNumberByUserAndStage(userService.getCurrentUser().getId(), stageName);
+        Integer number = taskService.getNumberByAssigneeAndStage(userService.getCurrentUser().getId(), stageName);
         return new ResponseEntity<>(number, HttpStatus.OK);
     }
 

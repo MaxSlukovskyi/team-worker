@@ -211,15 +211,17 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Integer getPercentageOfCompletedOnTime(Long id) {
         List<Task> tasks = this.getAllByAssignee(id);
+        Integer numberOfCompletedTasks = this.getNumberByAssigneeAndStage(id, RELEASED.name());
         List<Task> tasksOnTime = tasks.stream().filter(
-                task -> (task.getEndTime().before(task.getDueTime()) && task.getStage().equals(RELEASED)))
+                task -> (task.getEndTime().before(task.getDueTime()) && Objects.equals(task.getStage(), RELEASED)))
                 .collect(Collectors.toList());
-        return Math.toIntExact(Math.round((double) tasksOnTime.size() / tasks.size() * 100));
+
+        return Math.toIntExact(Math.round((double) tasksOnTime.size() / numberOfCompletedTasks * 100));
     }
 
     @Override
-    public Integer getNumberByUserAndStage(Long id, String stageName) {
-        return taskRepository.countTasksByAssigneeIdAndStage(id, stageName);
+    public Integer getNumberByAssigneeAndStage(Long id, String stageName) {
+        return taskRepository.countTasksByAssigneeIdAndStage(id, TaskStage.valueOf(stageName));
     }
 
     @Override
