@@ -12,7 +12,7 @@ import java.util.List;
 public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> getAllByProject(Project project);
 
-    List<Task> getAllByAssignee(Long id);
+    List<Task> getAllByAssigneeId(Long id);
 
     Integer countTasksByAssigneeIdAndStage(Long id, String stage);
 

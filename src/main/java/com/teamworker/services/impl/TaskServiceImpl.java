@@ -203,7 +203,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> getAllByAssignee(Long id) {
-        List<Task> tasks = taskRepository.getAllByAssignee(id);
+        List<Task> tasks = taskRepository.getAllByAssigneeId(id);
         log.info("IN getAllByAssignee - {} tasks found", tasks.size());
         return tasks;
     }
@@ -212,7 +212,7 @@ public class TaskServiceImpl implements TaskService {
     public Integer getPercentageOfCompletedOnTime(Long id) {
         List<Task> tasks = this.getAllByAssignee(id);
         List<Task> tasksOnTime = tasks.stream().filter(
-                task -> task.getEndTime().before(task.getDueTime()))
+                task -> (task.getEndTime().before(task.getDueTime()) && task.getStage().equals(RELEASED)))
                 .collect(Collectors.toList());
         return Math.toIntExact(Math.round((double) tasksOnTime.size() / tasks.size() * 100));
     }
