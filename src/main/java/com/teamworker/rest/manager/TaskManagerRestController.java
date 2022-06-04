@@ -94,11 +94,4 @@ public class TaskManagerRestController {
         Integer number = taskService.getNumberByAssigneeAndStage(id, stageName);
         return new ResponseEntity<>(number, HttpStatus.OK);
     }
-
-    @GetMapping(value = "/get/stats/number/released/all/{id}")
-    @Operation(summary = "Отримати кількість виконаних завдань певного користувача")
-    public ResponseEntity<Integer> getNumberOfCompletedByAssignee(@PathVariable(value = "id") Long id) {
-        Integer number = taskService.getNumberByAssigneeAndStage(id, TaskStage.RELEASED.name());
-        return new ResponseEntity<>(number, HttpStatus.OK);
-    }
 }

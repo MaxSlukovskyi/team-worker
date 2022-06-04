@@ -93,13 +93,6 @@ public class TaskRestController {
         return new ResponseEntity<>(number, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/get/stats/number/released/all")
-    @Operation(summary = "Отримати кількість виконаних завдань авторизованого користувача")
-    public ResponseEntity<Integer> getNumberOfCompletedByAssignee() {
-        Integer number = taskService.getNumberByAssigneeAndStage(userService.getCurrentUser().getId(), TaskStage.RELEASED.name());
-        return new ResponseEntity<>(number, HttpStatus.OK);
-    }
-
     @DeleteMapping(value = "/delete/{id}")
     @Operation(summary = "Видалити завдання")
     public ResponseEntity<TaskDto> deleteTask(@PathVariable(value = "id") Long id) {
