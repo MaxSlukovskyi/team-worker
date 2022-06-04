@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -261,5 +262,33 @@ public class TaskServiceImpl implements TaskService {
         String resultString = (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes+ ":"
                 + (seconds < 10 ? "0" : "") + seconds;
         return resultString;
+    }
+
+    @Override
+    public Integer getNumberOfMostProductiveMonthByAssignee(Long id) {
+        List<Task> tasks = taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.RELEASED);
+
+        Integer result = 0;
+
+        LocalDateTime oldestTaskEndTime = tasks.stream().min(Comparator.comparing(Task::getEndTime))
+                .orElseThrow(NoSuchElementException::new).getEndTime().toLocalDateTime();
+
+        LocalDateTime newestTaskEndTime = tasks.stream().max(Comparator.comparing(Task::getEndTime))
+                .orElseThrow(NoSuchElementException::new).getEndTime().toLocalDateTime();
+
+        while(!(oldestTaskEndTime.isAfter(newestTaskEndTime))) {
+            LocalDateTime finalOldestTaskEndTime = oldestTaskEndTime;
+            List<Task> filteredTasks = tasks.stream().filter(task ->
+                    (task.getEndTime().toLocalDateTime().getMonth() == finalOldestTaskEndTime.getMonth()) &&
+                            (task.getEndTime().toLocalDateTime().getYear() == finalOldestTaskEndTime.getYear())
+            ).collect(Collectors.toList());
+
+            if (result < filteredTasks.size()) {
+                result = filteredTasks.size();
+            }
+            oldestTaskEndTime = oldestTaskEndTime.plusMonths(1);
+        }
+
+        return result;
     }
 }

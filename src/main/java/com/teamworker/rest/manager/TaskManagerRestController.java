@@ -9,6 +9,7 @@ import com.teamworker.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -100,5 +101,12 @@ public class TaskManagerRestController {
     public ResponseEntity<String> getAverageTimeOfCompletingByAssignee(@PathVariable(value = "id") Long id) {
         String time = taskService.getAverageTimeOfCompletingByAssignee(userService.getCurrentUser().getId());
         return new ResponseEntity<>(time, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/get/stats/best/month")
+    @Operation(summary = "Отримати найбільшу кількість виконаних завдання за місяць певного користувача")
+    public ResponseEntity<Integer> getNumberOfMostProductiveMonthByAssignee(@PathVariable(value = "id") Long id) throws JSONException {
+        Integer number = taskService.getNumberOfMostProductiveMonthByAssignee(id);
+        return new ResponseEntity<>(number, HttpStatus.OK);
     }
 }

@@ -104,6 +104,13 @@ public class TaskRestController {
         return new ResponseEntity<>(response.toString(), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/get/stats/best/month")
+    @Operation(summary = "Отримати найбільшу кількість виконаних завдання за місяць авторизованого користувача")
+    public ResponseEntity<Integer> getNumberOfMostProductiveMonthByAssignee() throws JSONException {
+        Integer number = taskService.getNumberOfMostProductiveMonthByAssignee(userService.getCurrentUser().getId());
+        return new ResponseEntity<>(number, HttpStatus.OK);
+    }
+
     @DeleteMapping(value = "/delete/{id}")
     @Operation(summary = "Видалити завдання")
     public ResponseEntity<TaskDto> deleteTask(@PathVariable(value = "id") Long id) {
