@@ -5,6 +5,7 @@ import com.teamworker.dtos.ProjectDto;
 import com.teamworker.dtos.TaskDto;
 import com.teamworker.models.Project;
 import com.teamworker.models.Task;
+import com.teamworker.models.enums.TaskStage;
 import com.teamworker.services.TaskService;
 import com.teamworker.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -89,6 +90,13 @@ public class TaskRestController {
     @Operation(summary = "Отримати кількість завдань авторизованого користувача за стадією")
     public ResponseEntity<Integer> getNumberByUserAndStage(@PathVariable(value = "stage") String stageName) {
         Integer number = taskService.getNumberByAssigneeAndStage(userService.getCurrentUser().getId(), stageName);
+        return new ResponseEntity<>(number, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/get/stats/number/released/all")
+    @Operation(summary = "Отримати кількість виконаних завдань авторизованого користувача")
+    public ResponseEntity<Integer> getNumberOfCompletedByAssignee() {
+        Integer number = taskService.getNumberByAssigneeAndStage(userService.getCurrentUser().getId(), TaskStage.RELEASED.name());
         return new ResponseEntity<>(number, HttpStatus.OK);
     }
 

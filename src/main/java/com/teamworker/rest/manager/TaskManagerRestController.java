@@ -3,6 +3,7 @@ package com.teamworker.rest.manager;
 import com.teamworker.dtos.TaskDto;
 import com.teamworker.models.Task;
 import com.teamworker.models.User;
+import com.teamworker.models.enums.TaskStage;
 import com.teamworker.services.TaskService;
 import com.teamworker.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -91,6 +92,13 @@ public class TaskManagerRestController {
     public ResponseEntity<Integer> getNumberByUserAndStage(@PathVariable(value = "id") Long id,
                                                            @PathVariable(value = "stage") String stageName) {
         Integer number = taskService.getNumberByAssigneeAndStage(id, stageName);
+        return new ResponseEntity<>(number, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/get/stats/number/released/all/{id}")
+    @Operation(summary = "Отримати кількість виконаних завдань певного користувача")
+    public ResponseEntity<Integer> getNumberOfCompletedByAssignee(@PathVariable(value = "id") Long id) {
+        Integer number = taskService.getNumberByAssigneeAndStage(id, TaskStage.RELEASED.name());
         return new ResponseEntity<>(number, HttpStatus.OK);
     }
 }
