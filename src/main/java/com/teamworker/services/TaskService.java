@@ -7,6 +7,7 @@ import com.teamworker.models.User;
 import java.sql.Time;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 public interface TaskService {
 
@@ -29,6 +30,8 @@ public interface TaskService {
     String getAverageTimeOfCompletingByAssignee(Long id);
 
     Integer getNumberOfMostProductiveMonthByAssignee(Long id);
+
+    Map<String, Integer> getNumbersWithMonthsByAssignee(Long id);
 
     Task getById(Long id);
 

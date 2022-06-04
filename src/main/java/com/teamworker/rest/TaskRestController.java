@@ -8,20 +8,24 @@ import com.teamworker.models.Task;
 import com.teamworker.models.enums.TaskStage;
 import com.teamworker.services.TaskService;
 import com.teamworker.services.UserService;
+import io.swagger.v3.core.util.Json;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -106,9 +110,27 @@ public class TaskRestController {
 
     @GetMapping(value = "/get/stats/best/month")
     @Operation(summary = "Отримати найбільшу кількість виконаних завдання за місяць авторизованого користувача")
-    public ResponseEntity<Integer> getNumberOfMostProductiveMonthByAssignee() throws JSONException {
+    public ResponseEntity<Integer> getNumberOfMostProductiveMonthByAssignee() {
         Integer number = taskService.getNumberOfMostProductiveMonthByAssignee(userService.getCurrentUser().getId());
         return new ResponseEntity<>(number, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/get/stats/months")
+    @Operation(summary = "Отримати кількість виконаних завдання за місяцями авторизованого користувача")
+    public ResponseEntity<String> getNumbersWithMonthsByAssignee() {
+        Map<String, Integer> numbersWithMonths = taskService.getNumbersWithMonthsByAssignee(userService.getCurrentUser().getId());
+        JSONArray array = new JSONArray();
+        numbersWithMonths.entrySet().forEach(entry -> {
+            JSONObject month = new JSONObject();
+            try {
+                month.put("name", entry.getKey());
+                month.put("number", entry.getValue());
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+            array.put(month);
+        });
+        return new ResponseEntity<>(array.toString(), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/delete/{id}")

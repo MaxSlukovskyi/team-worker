@@ -291,4 +291,31 @@ public class TaskServiceImpl implements TaskService {
 
         return result;
     }
+
+    @Override
+    public Map<String, Integer> getNumbersWithMonthsByAssignee(Long id) {
+        List<Task> tasks = taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.RELEASED);
+
+        String[] months = {"Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень",
+                "Жовтень", "Листопад", "Грудень"};
+
+        LocalDateTime currentTime = LocalDateTime.now();
+        log.info("test {}", currentTime);
+
+        Map<String, Integer> numbersWithMonths = new LinkedHashMap<>();
+
+        while (currentTime.getMonth() != currentTime.minusMonths(7).getMonth() &&
+                currentTime.getYear() != currentTime.minusMonths(7).getYear()) {
+            LocalDateTime finalCurrentTime = currentTime;
+            List<Task> filteredTasks = tasks.stream().filter(task ->
+                    (task.getEndTime().toLocalDateTime().getMonth() == finalCurrentTime.getMonth()) &&
+                            (task.getEndTime().toLocalDateTime().getYear() == finalCurrentTime.getYear()))
+                    .collect(Collectors.toList());
+
+            numbersWithMonths.put(months[currentTime.getMonth().getValue() - 1], filteredTasks.size());
+            currentTime = currentTime.minusMonths(1);
+
+        }
+        return numbersWithMonths;
+    }
 }
