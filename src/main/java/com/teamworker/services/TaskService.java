@@ -4,6 +4,7 @@ import com.teamworker.models.Project;
 import com.teamworker.models.Task;
 import com.teamworker.models.User;
 
+import java.sql.Time;
 import java.text.ParseException;
 import java.util.List;
 
@@ -24,6 +25,8 @@ public interface TaskService {
     Integer getPercentageOfCompletedOnTime(Long id);
 
     Integer getNumberByAssigneeAndStage(Long id, String stageName);
+
+    String getAverageTimeOfCompletingByAssignee(Long id);
 
     Task getById(Long id);
 

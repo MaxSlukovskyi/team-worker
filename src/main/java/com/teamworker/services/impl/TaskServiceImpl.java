@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.teamworker.models.enums.TaskStage.*;
@@ -89,7 +90,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> getAllByStage(String stageName) {
-        List<Task> tasks = taskRepository.getAllByAssigneeAndStage(userService.getCurrentUser(),
+        List<Task> tasks = taskRepository.getAllByAssigneeIdAndStage(userService.getCurrentUser().getId(),
                 TaskStage.valueOf(stageName));
         for (Task task : tasks) {
             if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
@@ -231,5 +232,20 @@ public class TaskServiceImpl implements TaskService {
         List<Task> tasks = taskRepository.getAllByAssigneeIdAndCreateTimeBetween(id, parsedTime1, parsedTime2);
         log.info("IN getAllByAssigneeAndCreateTime - {} tasks found", tasks.size());
         return tasks;
+    }
+
+    @Override
+    public String getAverageTimeOfCompletingByAssignee(Long id) {
+        List<Task> tasks = taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.RELEASED);
+        List<Long> timesInMinutes = new ArrayList<>();
+        tasks.stream().forEach(task -> timesInMinutes.add(TimeUnit.MILLISECONDS.toMinutes(
+                task.getEndTime().getTime() - task.getStartTime().getTime())));
+        Long totalTimeInMinutes = timesInMinutes.stream().reduce(0L, Long::sum);
+        Long result = Math.round((double) totalTimeInMinutes / tasks.size());
+        Integer days = Math.toIntExact(result / 1440);
+        Integer hours = Math.toIntExact(result / 60 % 24);
+        Integer minutes = Math.toIntExact(result % 60);
+        String resultString = (days == 0 ? days + ":" : "") + hours + ":" + minutes;
+        return resultString;
     }
 }

@@ -93,6 +93,13 @@ public class TaskRestController {
         return new ResponseEntity<>(number, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/get/stats/average/time")
+    @Operation(summary = "Отримати середню тривалість виконання завдання авторизованого користувача")
+    public ResponseEntity<String> getAverageTimeOfCompletingByAssignee() {
+        String time = taskService.getAverageTimeOfCompletingByAssignee(userService.getCurrentUser().getId());
+        return new ResponseEntity<>(time, HttpStatus.OK);
+    }
+
     @DeleteMapping(value = "/delete/{id}")
     @Operation(summary = "Видалити завдання")
     public ResponseEntity<TaskDto> deleteTask(@PathVariable(value = "id") Long id) {

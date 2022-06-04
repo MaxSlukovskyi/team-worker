@@ -94,4 +94,11 @@ public class TaskManagerRestController {
         Integer number = taskService.getNumberByAssigneeAndStage(id, stageName);
         return new ResponseEntity<>(number, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/get/stats/average/time/{id}")
+    @Operation(summary = "Отримати середню тривалість виконання завдання певного користувача")
+    public ResponseEntity<String> getAverageTimeOfCompletingByAssignee(@PathVariable(value = "id") Long id) {
+        String time = taskService.getAverageTimeOfCompletingByAssignee(userService.getCurrentUser().getId());
+        return new ResponseEntity<>(time, HttpStatus.OK);
+    }
 }
