@@ -28,6 +28,8 @@ public interface TaskService {
 
     String getAverageTimeOfCompletingByAssignee(Long id);
 
+//    Integer getNumberWithBy
+
     Task getById(Long id);
 
     List<Task> getAllByStage(String stageName) throws ParseException;

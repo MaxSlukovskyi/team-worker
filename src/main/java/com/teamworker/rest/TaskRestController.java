@@ -11,6 +11,8 @@ import com.teamworker.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONException;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -95,9 +97,11 @@ public class TaskRestController {
 
     @GetMapping(value = "/get/stats/average/time")
     @Operation(summary = "Отримати середню тривалість виконання завдання авторизованого користувача")
-    public ResponseEntity<String> getAverageTimeOfCompletingByAssignee() {
+    public ResponseEntity<String> getAverageTimeOfCompletingByAssignee() throws JSONException {
         String time = taskService.getAverageTimeOfCompletingByAssignee(userService.getCurrentUser().getId());
-        return new ResponseEntity<>(time, HttpStatus.OK);
+        JSONObject response = new JSONObject();
+        response.put("response", time);
+        return new ResponseEntity<>(response.toString(), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/delete/{id}")
