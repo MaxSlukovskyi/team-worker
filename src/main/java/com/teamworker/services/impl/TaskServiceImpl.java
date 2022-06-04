@@ -148,6 +148,14 @@ public class TaskServiceImpl implements TaskService {
             }
             task.setEndTime(new Timestamp(new Date().getTime()));
         }
+        else if (Objects.equals(stageName, RELEASED.name())) {
+            if (task.getStartTime() == null) {
+                task.setStartTime(new Timestamp(new Date().getTime()));
+            }
+            else if (task.getEndTime() == null) {
+                task.setEndTime(new Timestamp(new Date().getTime()));
+            }
+        }
 
         task.setStage(TaskStage.valueOf(stageName));
         taskRepository.save(task);
@@ -237,15 +245,20 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public String getAverageTimeOfCompletingByAssignee(Long id) {
         List<Task> tasks = taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.RELEASED);
+
         List<Long> timesInMinutes = new ArrayList<>();
         tasks.stream().forEach(task -> timesInMinutes.add(TimeUnit.MILLISECONDS.toMinutes(
                 task.getEndTime().getTime() - task.getStartTime().getTime())));
+
         Long totalTimeInMinutes = timesInMinutes.stream().reduce(0L, Long::sum);
         Long result = Math.round((double) totalTimeInMinutes / tasks.size());
+
         Integer days = Math.toIntExact(result / 1440);
         Integer hours = Math.toIntExact(result / 60 % 24);
         Integer minutes = Math.toIntExact(result % 60);
-        String resultString = (days == 0 ? days + ":" : "") + hours + ":" + minutes;
+
+        String resultString = (days == 0 ? ((days < 10 ? "0" : "") + days + ":") : "")
+                + (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes;
         return resultString;
     }
 }
