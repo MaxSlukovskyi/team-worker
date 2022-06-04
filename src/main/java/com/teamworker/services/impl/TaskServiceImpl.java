@@ -253,12 +253,10 @@ public class TaskServiceImpl implements TaskService {
         Long totalTimeInMinutes = timesInMinutes.stream().reduce(0L, Long::sum);
         Long result = Math.round((double) totalTimeInMinutes / tasks.size());
 
-        Integer days = Math.toIntExact(result / 1440);
-        Integer hours = Math.toIntExact(result / 60 % 24);
+        Integer hours = Math.toIntExact(result / 60);
         Integer minutes = Math.toIntExact(result % 60);
 
-        String resultString = (days == 0 ? ((days < 10 ? "0" : "") + days + ":") : "")
-                + (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes;
+        String resultString = (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes;
         return resultString;
     }
 }
