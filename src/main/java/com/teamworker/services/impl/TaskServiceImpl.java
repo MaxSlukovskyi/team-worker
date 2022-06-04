@@ -246,17 +246,20 @@ public class TaskServiceImpl implements TaskService {
     public String getAverageTimeOfCompletingByAssignee(Long id) {
         List<Task> tasks = taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.RELEASED);
 
-        List<Long> timesInMinutes = new ArrayList<>();
-        tasks.stream().forEach(task -> timesInMinutes.add(TimeUnit.MILLISECONDS.toMinutes(
+        List<Long> timesInSeconds = new ArrayList<>();
+        tasks.stream().forEach(task -> timesInSeconds.add(TimeUnit.MILLISECONDS.toSeconds(
                 task.getEndTime().getTime() - task.getStartTime().getTime())));
 
-        Long totalTimeInMinutes = timesInMinutes.stream().reduce(0L, Long::sum);
-        Long result = Math.round((double) totalTimeInMinutes / tasks.size());
+        Long totalTimeInSeconds = timesInSeconds.stream().reduce(0L, Long::sum);
+        Long result = Math.round((double) totalTimeInSeconds / tasks.size());
 
-        Integer hours = Math.toIntExact(result / 60);
-        Integer minutes = Math.toIntExact(result % 60);
+        Integer hours = Math.toIntExact(result / 3600);
+        Integer minutes = Math.toIntExact(result % 3600 / 60);
+        Integer seconds = Math.toIntExact(result % 3600 % 60 );
 
-        String resultString = (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes;
+
+        String resultString = (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes+ ":"
+                + (seconds < 10 ? "0" : "") + seconds;
         return resultString;
     }
 }
