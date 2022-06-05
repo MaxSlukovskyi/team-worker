@@ -256,6 +256,19 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public Map<String, Integer> getNumbersWithStagesByAssignee(Long id) {
+        Map<String, Integer> numbersWithStages = new LinkedHashMap<>();
+
+        for (TaskStage stage : TaskStage.values()) {
+            Integer number = this.getNumberByAssigneeAndStage(id, stage.name());
+            if(number != 0) {
+                numbersWithStages.put(stage.name(), number);
+            }
+        }
+        return numbersWithStages;
+    }
+
+    @Override
     public List<Task> getAllByAssigneeAndCreateTime(Long id, String time1, String time2) throws ParseException {
         Timestamp parsedTime1 = new Timestamp(dateFormat.parse(time1).getTime());
         Timestamp parsedTime2 = new Timestamp(dateFormat.parse(time2).getTime());

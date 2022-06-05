@@ -31,6 +31,8 @@ public interface TaskService {
 
     Map<String, Integer> getNumbersWithTypesByAssignee(Long id);
 
+    Map<String, Integer> getNumbersWithStagesByAssignee(Long id);
+
     String getAverageTimeOfCompletingByAssignee(Long id);
 
     Integer getNumberOfMostProductiveMonthByAssignee(Long id);

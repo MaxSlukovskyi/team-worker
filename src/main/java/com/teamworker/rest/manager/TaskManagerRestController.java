@@ -106,14 +106,14 @@ public class TaskManagerRestController {
         return new ResponseEntity<>(time, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/get/stats/best/month")
+    @GetMapping(value = "/get/stats/best/month/{id}")
     @Operation(summary = "Отримати найбільшу кількість виконаних завдання за місяць певного користувача")
     public ResponseEntity<Integer> getNumberOfMostProductiveMonthByAssignee(@PathVariable(value = "id") Long id) throws JSONException {
         Integer number = taskService.getNumberOfMostProductiveMonthByAssignee(id);
         return new ResponseEntity<>(number, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/get/stats/months")
+    @GetMapping(value = "/get/stats/months/{id}")
     @Operation(summary = "Отримати кількість виконаних завдання за місяцями певного користувача")
     public ResponseEntity<String> getNumbersWithMonthsByAssignee(@PathVariable(value = "id") Long id) {
         Map<String, Integer> numbersWithMonths = taskService.getNumbersWithMonthsByAssignee(id);
@@ -131,7 +131,7 @@ public class TaskManagerRestController {
         return new ResponseEntity<>(array.toString(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/get/stats/types")
+    @GetMapping(value = "/get/stats/types/{id}")
     @Operation(summary = "Отримати кількість завдань за типами певного користувача")
     public ResponseEntity<String> getNumbersWithTypesByAssignee(@PathVariable(value = "id") Long id) {
         Map<String, Integer> numbersWithTypes = taskService.getNumbersWithTypesByAssignee(id);
@@ -145,6 +145,24 @@ public class TaskManagerRestController {
                 throw new RuntimeException(e);
             }
             array.put(type);
+        });
+        return new ResponseEntity<>(array.toString(), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/get/stats/stages/{id}")
+    @Operation(summary = "Отримати кількість завдань за стадіями певного користувача")
+    public ResponseEntity<String> getNumbersWithStagesByAssignee(@PathVariable(value = "id") Long id) {
+        Map<String, Integer> numbersWithStages = taskService.getNumbersWithStagesByAssignee(id);
+        JSONArray array = new JSONArray();
+        numbersWithStages.entrySet().forEach(entry -> {
+            JSONObject stage = new JSONObject();
+            try {
+                stage.put("name", entry.getKey());
+                stage.put("number", entry.getValue());
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+            array.put(stage);
         });
         return new ResponseEntity<>(array.toString(), HttpStatus.OK);
     }
