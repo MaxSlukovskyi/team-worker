@@ -315,7 +315,7 @@ public class TaskServiceImpl implements TaskService {
     public Integer getNumberOfMostProductiveMonthByAssignee(Long id) {
         List<Task> tasks = taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.RELEASED);
 
-        if (tasks == null) {
+        if (tasks.isEmpty()) {
             return 0;
         }
 
