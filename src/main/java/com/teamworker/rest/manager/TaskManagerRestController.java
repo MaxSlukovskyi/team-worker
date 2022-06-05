@@ -130,4 +130,22 @@ public class TaskManagerRestController {
         });
         return new ResponseEntity<>(array.toString(), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/get/stats/types")
+    @Operation(summary = "Отримати кількість завдань за типами певного користувача")
+    public ResponseEntity<String> getNumbersWithTypesByAssignee(@PathVariable(value = "id") Long id) {
+        Map<String, Integer> numbersWithTypes = taskService.getNumbersWithTypesByAssignee(id);
+        JSONArray array = new JSONArray();
+        numbersWithTypes.entrySet().forEach(entry -> {
+            JSONObject type = new JSONObject();
+            try {
+                type.put("name", entry.getKey());
+                type.put("number", entry.getValue());
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+            array.put(type);
+        });
+        return new ResponseEntity<>(array.toString(), HttpStatus.OK);
+    }
 }

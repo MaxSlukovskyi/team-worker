@@ -2,6 +2,7 @@ package com.teamworker.services.impl;
 
 import com.teamworker.models.*;
 import com.teamworker.models.enums.TaskStage;
+import com.teamworker.models.enums.TaskType;
 import com.teamworker.repositories.RoleRepository;
 import com.teamworker.repositories.TaskRepository;
 import com.teamworker.repositories.UserRepository;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.teamworker.models.enums.TaskStage.*;
 
@@ -235,6 +238,24 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public Integer getNumberByAssigneeAndType(Long id, String typeName) {
+        return taskRepository.countTasksByAssigneeIdAndType(id, TaskType.valueOf(typeName));
+    }
+
+    @Override
+    public Map<String, Integer> getNumbersWithTypesByAssignee(Long id) {
+        Map<String, Integer> numbersWithTypes = new LinkedHashMap<>();
+
+        for (TaskType type : TaskType.values()) {
+            Integer number = this.getNumberByAssigneeAndType(id, type.name());
+            if(number != 0) {
+                numbersWithTypes.put(type.name(), number);
+            }
+        }
+        return numbersWithTypes;
+    }
+
+    @Override
     public List<Task> getAllByAssigneeAndCreateTime(Long id, String time1, String time2) throws ParseException {
         Timestamp parsedTime1 = new Timestamp(dateFormat.parse(time1).getTime());
         Timestamp parsedTime2 = new Timestamp(dateFormat.parse(time2).getTime());
@@ -314,8 +335,8 @@ public class TaskServiceImpl implements TaskService {
 
             numbersWithMonths.put(months[currentTime.getMonth().getValue() - 1], filteredTasks.size());
             currentTime = currentTime.minusMonths(1);
-
         }
+
         return numbersWithMonths;
     }
 }

@@ -133,6 +133,24 @@ public class TaskRestController {
         return new ResponseEntity<>(array.toString(), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/get/stats/types")
+    @Operation(summary = "Отримати кількість завдань за типами авторизованого користувача")
+    public ResponseEntity<String> getNumbersWithTypesByAssignee() {
+        Map<String, Integer> numbersWithTypes = taskService.getNumbersWithTypesByAssignee(userService.getCurrentUser().getId());
+        JSONArray array = new JSONArray();
+        numbersWithTypes.entrySet().forEach(entry -> {
+            JSONObject type = new JSONObject();
+            try {
+                type.put("name", entry.getKey());
+                type.put("number", entry.getValue());
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+            array.put(type);
+        });
+        return new ResponseEntity<>(array.toString(), HttpStatus.OK);
+    }
+
     @DeleteMapping(value = "/delete/{id}")
     @Operation(summary = "Видалити завдання")
     public ResponseEntity<TaskDto> deleteTask(@PathVariable(value = "id") Long id) {

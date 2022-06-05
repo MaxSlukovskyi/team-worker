@@ -4,6 +4,7 @@ import com.teamworker.models.Project;
 import com.teamworker.models.Task;
 import com.teamworker.models.User;
 import com.teamworker.models.enums.TaskStage;
+import com.teamworker.models.enums.TaskType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.sql.Timestamp;
@@ -15,6 +16,8 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> getAllByAssigneeId(Long id);
 
     Integer countTasksByAssigneeIdAndStage(Long id, TaskStage stage);
+
+    Integer countTasksByAssigneeIdAndType(Long id, TaskType type);
 
     List<Task> getAllByAssigneeIdAndStage(Long id, TaskStage stage);
 
