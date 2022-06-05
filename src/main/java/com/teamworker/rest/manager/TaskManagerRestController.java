@@ -102,7 +102,7 @@ public class TaskManagerRestController {
     @GetMapping(value = "/get/stats/average/time/{id}")
     @Operation(summary = "Отримати середню тривалість виконання завдання певного користувача")
     public ResponseEntity<String> getAverageTimeOfCompletingByAssignee(@PathVariable(value = "id") Long id) {
-        String time = taskService.getAverageTimeOfCompletingByAssignee(userService.getCurrentUser().getId());
+        String time = taskService.getAverageTimeOfCompletingByAssignee(id);
         return new ResponseEntity<>(time, HttpStatus.OK);
     }
 

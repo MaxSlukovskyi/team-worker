@@ -290,7 +290,7 @@ public class TaskServiceImpl implements TaskService {
     public String getAverageTimeOfCompletingByAssignee(Long id) {
         List<Task> tasks = taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.RELEASED);
 
-        if (tasks == null) {
+        if (tasks.isEmpty()) {
             return "00:00:00";
         }
 
