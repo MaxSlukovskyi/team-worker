@@ -105,7 +105,7 @@ public class TaskManagerRestController {
         String time = taskService.getAverageTimeOfCompletingByAssignee(id);
         JSONObject response = new JSONObject();
         response.put("response", time);
-        return new ResponseEntity<>(time, HttpStatus.OK);
+        return new ResponseEntity<>(response.toString(), HttpStatus.OK);
     }
 
     @GetMapping(value = "/get/stats/best/month/{id}")
