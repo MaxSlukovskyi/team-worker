@@ -248,9 +248,7 @@ public class TaskServiceImpl implements TaskService {
 
         for (TaskType type : TaskType.values()) {
             Integer number = this.getNumberByAssigneeAndType(id, type.name());
-            if(number != 0) {
-                numbersWithTypes.put(type.name(), number);
-            }
+            numbersWithTypes.put(type.name(), number);
         }
         return numbersWithTypes;
     }
@@ -261,9 +259,7 @@ public class TaskServiceImpl implements TaskService {
 
         for (TaskStage stage : TaskStage.values()) {
             Integer number = this.getNumberByAssigneeAndStage(id, stage.name());
-            if(number != 0) {
-                numbersWithStages.put(stage.name(), number);
-            }
+            numbersWithStages.put(stage.name(), number);
         }
         return numbersWithStages;
     }
