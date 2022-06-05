@@ -277,7 +277,7 @@ public class TaskServiceImpl implements TaskService {
         tasks.addAll(taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.CREATED));
         tasks.addAll(taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.IN_PROGRESS));
 
-        if (tasks == null) {
+        if (tasks.isEmpty()) {
             return null;
         }
 

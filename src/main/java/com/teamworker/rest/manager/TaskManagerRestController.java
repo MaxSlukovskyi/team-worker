@@ -174,6 +174,9 @@ public class TaskManagerRestController {
     public ResponseEntity<TaskDto> getTaskWithClosestDueTimeByAssignee(@PathVariable(value = "id") Long id)
             throws ParseException {
         Task task = taskService.getTaskWithClosestDueTimeByAssignee(id);
+        if (task == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
         return new ResponseEntity<>(TaskDto.fromTask(task), HttpStatus.OK);
     }
 }
