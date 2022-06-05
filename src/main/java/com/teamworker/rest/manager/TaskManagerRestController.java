@@ -101,8 +101,10 @@ public class TaskManagerRestController {
 
     @GetMapping(value = "/get/stats/average/time/{id}")
     @Operation(summary = "Отримати середню тривалість виконання завдання певного користувача")
-    public ResponseEntity<String> getAverageTimeOfCompletingByAssignee(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<String> getAverageTimeOfCompletingByAssignee(@PathVariable(value = "id") Long id) throws JSONException {
         String time = taskService.getAverageTimeOfCompletingByAssignee(id);
+        JSONObject response = new JSONObject();
+        response.put("response", time);
         return new ResponseEntity<>(time, HttpStatus.OK);
     }
 
