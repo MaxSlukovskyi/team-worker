@@ -257,9 +257,11 @@ public class TaskServiceImpl implements TaskService {
     public Map<String, Integer> getNumbersWithStagesByAssignee(Long id) {
         Map<String, Integer> numbersWithStages = new LinkedHashMap<>();
 
+        String[] stages = {"Створено", "В процесі", "На перевірці", "Виконано"};
+
         for (TaskStage stage : TaskStage.values()) {
             Integer number = this.getNumberByAssigneeAndStage(id, stage.name());
-            numbersWithStages.put(stage.name(), number);
+            numbersWithStages.put(stages[stage.ordinal()], number);
         }
         return numbersWithStages;
     }
