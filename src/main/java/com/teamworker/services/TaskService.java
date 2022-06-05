@@ -39,6 +39,8 @@ public interface TaskService {
 
     Map<String, Integer> getNumbersWithMonthsByAssignee(Long id);
 
+    Task getTaskWithClosestDueTimeByAssignee(Long id);
+
     Task getById(Long id);
 
     List<Task> getAllByStage(String stageName) throws ParseException;

@@ -63,7 +63,7 @@ public class TaskManagerRestController {
 
         Task task = taskService.update(id, taskDto.toTask());
 
-        if(task == null) {
+        if (task == null) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
@@ -165,5 +165,13 @@ public class TaskManagerRestController {
             array.put(stage);
         });
         return new ResponseEntity<>(array.toString(), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/get/stats/closest/{id}")
+    @Operation(summary = "Отримати завдання з найкоротшим терміном виконання авторизованого користувача")
+    public ResponseEntity<TaskDto> getTaskWithClosestDueTimeByAssignee(@PathVariable(value = "id") Long id)
+            throws ParseException {
+        Task task = taskService.getTaskWithClosestDueTimeByAssignee(id);
+        return new ResponseEntity<>(TaskDto.fromTask(task), HttpStatus.OK);
     }
 }

@@ -170,7 +170,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task update(Long id, Task task) {
         Task foundTask = taskRepository.findById(id).orElse(null);
-        if(foundTask == null) {
+        if (foundTask == null) {
             return null;
         }
 
@@ -276,8 +276,28 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public Task getTaskWithClosestDueTimeByAssignee(Long id) {
+        List<Task> tasks = new ArrayList<>();
+
+        tasks.addAll(taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.CREATED));
+        tasks.addAll(taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.IN_PROGRESS));
+
+        if (tasks == null) {
+            return null;
+        }
+
+        Task result = tasks.stream().min(Comparator.comparing(Task::getDueTime)).orElse(null);
+
+        return result;
+    }
+
+    @Override
     public String getAverageTimeOfCompletingByAssignee(Long id) {
         List<Task> tasks = taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.RELEASED);
+
+        if (tasks == null) {
+            return "00:00:00";
+        }
 
         List<Long> timesInSeconds = new ArrayList<>();
         tasks.stream().forEach(task -> timesInSeconds.add(TimeUnit.MILLISECONDS.toSeconds(
@@ -299,6 +319,10 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Integer getNumberOfMostProductiveMonthByAssignee(Long id) {
         List<Task> tasks = taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.RELEASED);
+
+        if (tasks == null) {
+            return 0;
+        }
 
         Integer result = 0;
 

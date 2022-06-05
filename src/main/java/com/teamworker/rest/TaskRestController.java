@@ -50,7 +50,7 @@ public class TaskRestController {
     @Operation(summary = "Додати завдання")
     public ResponseEntity<TaskDto> addTask(@RequestBody TaskDto taskDto) throws ParseException {
         Task task = taskService.add(taskDto.toTask());
-        if(task == null) {
+        if (task == null) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
         TaskDto result = TaskDto.fromTask(task);
@@ -77,7 +77,7 @@ public class TaskRestController {
 
         Task task = taskService.changeStage(id, stageName);
 
-        if(task == null) {
+        if (task == null) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
 
@@ -169,10 +169,18 @@ public class TaskRestController {
         return new ResponseEntity<>(array.toString(), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/get/stats/closest")
+    @Operation(summary = "Отримати завдання з найкоротшим терміном виконання авторизованого користувача")
+    public ResponseEntity<TaskDto> getTaskWithClosestDueTimeByAssignee()
+            throws ParseException {
+        Task task = taskService.getTaskWithClosestDueTimeByAssignee(userService.getCurrentUser().getId());
+        return new ResponseEntity<>(TaskDto.fromTask(task), HttpStatus.OK);
+    }
+
     @DeleteMapping(value = "/delete/{id}")
     @Operation(summary = "Видалити завдання")
     public ResponseEntity<TaskDto> deleteTask(@PathVariable(value = "id") Long id) {
-        if(taskService.getById(id) == null) {
+        if (taskService.getById(id) == null) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
         taskService.delete(id);
