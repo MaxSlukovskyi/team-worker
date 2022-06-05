@@ -60,7 +60,7 @@ public class TaskRestController {
     @GetMapping(value = "/get/all/{stage}")
     @Operation(summary = "Отримати всі завдання за стадією")
     public ResponseEntity<List<TaskDto>> getAllByStage(@PathVariable(value = "stage") String stageName) throws ParseException {
-        List<Task> tasks = taskService.getAllByStage(stageName);
+        List<Task> tasks = taskService.getAllByStage(userService.getCurrentUser().getId(), stageName);
         List<TaskDto> result = new ArrayList<>();
 
         for (Task task : tasks) {
@@ -174,6 +174,11 @@ public class TaskRestController {
     public ResponseEntity<TaskDto> getTaskWithClosestDueTimeByAssignee()
             throws ParseException {
         Task task = taskService.getTaskWithClosestDueTimeByAssignee(userService.getCurrentUser().getId());
+
+        if (task == null) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
         return new ResponseEntity<>(TaskDto.fromTask(task), HttpStatus.OK);
     }
 

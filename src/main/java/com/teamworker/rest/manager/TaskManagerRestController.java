@@ -40,7 +40,7 @@ public class TaskManagerRestController {
     @Operation(summary = "Отримати всі завдання доступних проектів (manager)")
     public ResponseEntity<List<TaskDto>> getAll() throws ParseException {
 
-        List<Task> tasks = taskService.getAllByManager(userService.getCurrentUser().getId());
+        List<Task> tasks = taskService.getAllByManager(userService.getCurrentUser());
 
         if (tasks == null) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -74,7 +74,7 @@ public class TaskManagerRestController {
     @GetMapping(value = "/get/all/{stage}")
     @Operation(summary = "Отримати всі завдання за стадією для авторизованого менеджера")
     public ResponseEntity<List<TaskDto>> getAllByStage(@PathVariable(value = "stage") String stageName) throws ParseException {
-        List<Task> tasks = taskService.getAllByStageForManager(stageName, userService.getCurrentUser().getId());
+        List<Task> tasks = taskService.getAllByStageForManager(userService.getCurrentUser(), stageName);
         List<TaskDto> result = new ArrayList<>();
 
         for (Task task : tasks) {

@@ -7,7 +7,6 @@ import com.teamworker.repositories.RoleRepository;
 import com.teamworker.repositories.TaskRepository;
 import com.teamworker.repositories.UserRepository;
 import com.teamworker.services.TaskService;
-import com.teamworker.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,6 @@ import static com.teamworker.models.enums.TaskStage.*;
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
-    private final UserService userService;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy, hh:mm:ss");
 
 
@@ -74,8 +72,7 @@ public class TaskServiceImpl implements TaskService {
         return tasks;
     }
 
-    public List<Task> getAllByManager(Long id) {
-        User manager = userService.getById(id);
+    public List<Task> getAllByManager(User manager) {
         List<Task> tasks = new ArrayList<>();
 
         manager.getManagerProjects().stream().forEach(project ->
@@ -93,9 +90,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getAllByStage(String stageName) {
-        List<Task> tasks = taskRepository.getAllByAssigneeIdAndStage(userService.getCurrentUser().getId(),
-                TaskStage.valueOf(stageName));
+    public List<Task> getAllByStage(Long id, String stageName) {
+        List<Task> tasks = taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.valueOf(stageName));
         for (Task task : tasks) {
             if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
                     (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
@@ -121,8 +117,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getAllByStageForManager(String stageName, Long id) {
-        User manager = userService.getById(id);
+    public List<Task> getAllByStageForManager(User manager, String stageName) {
         List<Task> tasks = taskRepository.getAllByStageAndProject_Manager(TaskStage.valueOf(stageName), manager);
         for (Task task : tasks) {
             if (task.getDueTime().before(new Timestamp(new Date().getTime()))) {
@@ -130,7 +125,7 @@ public class TaskServiceImpl implements TaskService {
                 taskRepository.save(task);
             }
         }
-        log.info("IN getAllByStageForAdmin - {} tasks added", tasks.size());
+        log.info("IN getAllByStageForManager - {} tasks added", tasks.size());
         return tasks;
     }
 

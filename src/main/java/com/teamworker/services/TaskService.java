@@ -43,13 +43,13 @@ public interface TaskService {
 
     Task getById(Long id);
 
-    List<Task> getAllByStage(String stageName) throws ParseException;
+    List<Task> getAllByStage(Long id, String stageName) throws ParseException;
 
-    List<Task> getAllByManager(Long id);
+    List<Task> getAllByManager(User manager);
 
     List<Task> getAllByStageForAdmin(String stageName) throws ParseException;
 
-    List<Task> getAllByStageForManager(String stageName, Long id);
+    List<Task> getAllByStageForManager(User manager, String stageName);
 
     Task changeStage(Long taskId, String stageName);
 
