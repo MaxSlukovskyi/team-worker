@@ -60,7 +60,6 @@ public class TaskManagerRestController {
     public ResponseEntity<TaskDto> updateTask(
             @PathVariable(value = "id") Long id,
             @RequestBody TaskDto taskDto) throws ParseException {
-
         Task task = taskService.update(id, taskDto.toTask());
 
         if (task == null) {
