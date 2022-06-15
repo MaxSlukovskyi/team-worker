@@ -62,8 +62,9 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAll() {
         List<Task> tasks = taskRepository.findAll();
         for (Task task : tasks) {
-            if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
-                    (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
+            if ((task.getDueTime().before(new Timestamp(new Date().getTime())) &&
+                    (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) ||
+                    task.getDueTime().before(task.getEndTime())) {
                 task.setOverdue(true);
             }
             else {
@@ -82,8 +83,9 @@ public class TaskServiceImpl implements TaskService {
                 tasks.addAll(this.getAllByProject(project)));
 
         for (Task task : tasks) {
-            if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
-                    (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
+            if ((task.getDueTime().before(new Timestamp(new Date().getTime())) &&
+                    (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) ||
+                    task.getDueTime().before(task.getEndTime())) {
                 task.setOverdue(true);
             }
             else {
@@ -99,8 +101,9 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAllByStage(Long id, String stageName) {
         List<Task> tasks = taskRepository.getAllByAssigneeIdAndStageOrderByDueTime(id, TaskStage.valueOf(stageName));
         for (Task task : tasks) {
-            if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
-                    (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
+            if ((task.getDueTime().before(new Timestamp(new Date().getTime())) &&
+                    (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) ||
+                    task.getDueTime().before(task.getEndTime())) {
                 task.setOverdue(true);
             }
             else {
@@ -116,8 +119,9 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAllByStageForAdmin(String stageName) {
         List<Task> tasks = taskRepository.getAllByStageOrderByDueTime(TaskStage.valueOf(stageName));
         for (Task task : tasks) {
-            if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
-                    (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
+            if ((task.getDueTime().before(new Timestamp(new Date().getTime())) &&
+                    (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) ||
+                    task.getDueTime().before(task.getEndTime())) {
                 task.setOverdue(true);
             }
             else {
@@ -133,8 +137,9 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAllByStageForManager(User manager, String stageName) {
         List<Task> tasks = taskRepository.getAllByStageAndProject_ManagerOrderByDueTime(TaskStage.valueOf(stageName), manager);
         for (Task task : tasks) {
-            if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
-                    (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
+            if ((task.getDueTime().before(new Timestamp(new Date().getTime())) &&
+                    (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) ||
+                    task.getDueTime().before(task.getEndTime())) {
                 task.setOverdue(true);
             }
             else {
