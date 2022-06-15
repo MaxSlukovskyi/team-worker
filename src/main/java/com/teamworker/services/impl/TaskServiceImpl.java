@@ -137,6 +137,9 @@ public class TaskServiceImpl implements TaskService {
                     (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
                 task.setOverdue(true);
             }
+            else {
+                task.setOverdue(false);
+            }
             taskRepository.save(task);
         }
         log.info("IN getAllByStageForManager - {} tasks added", tasks.size());
