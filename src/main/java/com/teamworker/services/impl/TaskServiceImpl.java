@@ -65,11 +65,11 @@ public class TaskServiceImpl implements TaskService {
             if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
                     (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
                 task.setOverdue(true);
-                taskRepository.save(task);
             }
             else {
                 task.setOverdue(false);
             }
+            taskRepository.save(task);
         }
         log.info("IN getAll - {} tasks added", tasks.size());
         return tasks;
@@ -85,11 +85,11 @@ public class TaskServiceImpl implements TaskService {
             if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
                     (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
                 task.setOverdue(true);
-                taskRepository.save(task);
             }
             else {
                 task.setOverdue(false);
             }
+            taskRepository.save(task);
         }
         log.info("IN getAll - {} tasks added", tasks.size());
         return tasks;
@@ -102,11 +102,11 @@ public class TaskServiceImpl implements TaskService {
             if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
                     (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
                 task.setOverdue(true);
-                taskRepository.save(task);
             }
             else {
                 task.setOverdue(false);
             }
+            taskRepository.save(task);
         }
         log.info("IN getAllByStage - {} tasks added", tasks.size());
         return tasks;
@@ -119,11 +119,11 @@ public class TaskServiceImpl implements TaskService {
             if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
                     (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
                 task.setOverdue(true);
-                taskRepository.save(task);
             }
             else {
                 task.setOverdue(false);
             }
+            taskRepository.save(task);
         }
         log.info("IN getAllByStageForAdmin - {} tasks added", tasks.size());
         return tasks;
@@ -136,8 +136,8 @@ public class TaskServiceImpl implements TaskService {
             if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
                     (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
                 task.setOverdue(true);
-                taskRepository.save(task);
             }
+            taskRepository.save(task);
         }
         log.info("IN getAllByStageForManager - {} tasks added", tasks.size());
         return tasks;
