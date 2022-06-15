@@ -67,6 +67,9 @@ public class TaskServiceImpl implements TaskService {
                 task.setOverdue(true);
                 taskRepository.save(task);
             }
+            else {
+                task.setOverdue(false);
+            }
         }
         log.info("IN getAll - {} tasks added", tasks.size());
         return tasks;
@@ -84,6 +87,9 @@ public class TaskServiceImpl implements TaskService {
                 task.setOverdue(true);
                 taskRepository.save(task);
             }
+            else {
+                task.setOverdue(false);
+            }
         }
         log.info("IN getAll - {} tasks added", tasks.size());
         return tasks;
@@ -98,6 +104,9 @@ public class TaskServiceImpl implements TaskService {
                 task.setOverdue(true);
                 taskRepository.save(task);
             }
+            else {
+                task.setOverdue(false);
+            }
         }
         log.info("IN getAllByStage - {} tasks added", tasks.size());
         return tasks;
@@ -111,6 +120,9 @@ public class TaskServiceImpl implements TaskService {
                     (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
                 task.setOverdue(true);
                 taskRepository.save(task);
+            }
+            else {
+                task.setOverdue(false);
             }
         }
         log.info("IN getAllByStageForAdmin - {} tasks added", tasks.size());
