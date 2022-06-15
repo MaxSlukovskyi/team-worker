@@ -107,7 +107,8 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAllByStageForAdmin(String stageName) {
         List<Task> tasks = taskRepository.getAllByStageOrderByDueTime(TaskStage.valueOf(stageName));
         for (Task task : tasks) {
-            if (task.getDueTime().before(new Timestamp(new Date().getTime()))) {
+            if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
+                    (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
                 task.setOverdue(true);
                 taskRepository.save(task);
             }
@@ -120,7 +121,8 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getAllByStageForManager(User manager, String stageName) {
         List<Task> tasks = taskRepository.getAllByStageAndProject_ManagerOrderByDueTime(TaskStage.valueOf(stageName), manager);
         for (Task task : tasks) {
-            if (task.getDueTime().before(new Timestamp(new Date().getTime()))) {
+            if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
+                    (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
                 task.setOverdue(true);
                 taskRepository.save(task);
             }
