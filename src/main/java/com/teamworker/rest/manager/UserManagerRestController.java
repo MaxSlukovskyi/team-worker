@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "https://team-worker-client.herokuapp.com/")
 @RequestMapping(value = "/api/v1/manager/users")
 @Tag(name = "/api/v1/manager/users", description = "Контролер для керування користувачами")
 public class UserManagerRestController {

@@ -19,11 +19,11 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     Integer countTasksByAssigneeIdAndType(Long id, TaskType type);
 
-    List<Task> getAllByAssigneeIdAndStage(Long id, TaskStage stage);
+    List<Task> getAllByAssigneeIdAndStageOrderByDueTime(Long id, TaskStage stage);
 
-    List<Task> getAllByStage(TaskStage stage);
+    List<Task> getAllByStageOrderByDueTime(TaskStage stage);
 
-    List<Task> getAllByStageAndProject_Manager(TaskStage stage, User manager);
+    List<Task> getAllByStageAndProject_ManagerOrderByDueTime(TaskStage stage, User manager);
 
     List<Task> getAllByAssigneeIdAndCreateTimeBetween(Long assignee_id, Timestamp time1, Timestamp time2);
 }

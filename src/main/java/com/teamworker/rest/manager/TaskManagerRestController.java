@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "https://team-worker-client.herokuapp.com/")
 @RequestMapping(value = "/api/v1/manager/task")
 @Tag(name = "/api/v1/manager/task", description = "Контролер для керування завданнями (manager)")
 public class TaskManagerRestController {

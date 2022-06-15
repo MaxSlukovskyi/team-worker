@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "https://team-worker-client.herokuapp.com/")
 @RequestMapping(value = "/api/v1/admin/projects")
 @Tag(name = "/api/v1/admin/projects", description = "Контролер для керування проектами (admin)")
 public class ProjectAdminRestController {

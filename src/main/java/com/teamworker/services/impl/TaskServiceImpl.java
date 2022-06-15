@@ -91,7 +91,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> getAllByStage(Long id, String stageName) {
-        List<Task> tasks = taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.valueOf(stageName));
+        List<Task> tasks = taskRepository.getAllByAssigneeIdAndStageOrderByDueTime(id, TaskStage.valueOf(stageName));
         for (Task task : tasks) {
             if (task.getDueTime().before(new Timestamp(new Date().getTime())) &&
                     (task.getStage() == CREATED || task.getStage() == IN_PROGRESS)) {
@@ -105,7 +105,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> getAllByStageForAdmin(String stageName) {
-        List<Task> tasks = taskRepository.getAllByStage(TaskStage.valueOf(stageName));
+        List<Task> tasks = taskRepository.getAllByStageOrderByDueTime(TaskStage.valueOf(stageName));
         for (Task task : tasks) {
             if (task.getDueTime().before(new Timestamp(new Date().getTime()))) {
                 task.setOverdue(true);
@@ -118,7 +118,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> getAllByStageForManager(User manager, String stageName) {
-        List<Task> tasks = taskRepository.getAllByStageAndProject_Manager(TaskStage.valueOf(stageName), manager);
+        List<Task> tasks = taskRepository.getAllByStageAndProject_ManagerOrderByDueTime(TaskStage.valueOf(stageName), manager);
         for (Task task : tasks) {
             if (task.getDueTime().before(new Timestamp(new Date().getTime()))) {
                 task.setOverdue(true);
@@ -274,8 +274,8 @@ public class TaskServiceImpl implements TaskService {
     public Task getTaskWithClosestDueTimeByAssignee(Long id) {
         List<Task> tasks = new ArrayList<>();
 
-        tasks.addAll(taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.CREATED));
-        tasks.addAll(taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.IN_PROGRESS));
+        tasks.addAll(taskRepository.getAllByAssigneeIdAndStageOrderByDueTime(id, TaskStage.CREATED));
+        tasks.addAll(taskRepository.getAllByAssigneeIdAndStageOrderByDueTime(id, TaskStage.IN_PROGRESS));
 
         if (tasks.isEmpty()) {
             return null;
@@ -288,7 +288,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public String getAverageTimeOfCompletingByAssignee(Long id) {
-        List<Task> tasks = taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.RELEASED);
+        List<Task> tasks = taskRepository.getAllByAssigneeIdAndStageOrderByDueTime(id, TaskStage.RELEASED);
 
         if (tasks.isEmpty()) {
             return "00:00:00";
@@ -313,7 +313,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Integer getNumberOfMostProductiveMonthByAssignee(Long id) {
-        List<Task> tasks = taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.RELEASED);
+        List<Task> tasks = taskRepository.getAllByAssigneeIdAndStageOrderByDueTime(id, TaskStage.RELEASED);
 
         if (tasks.isEmpty()) {
             return 0;
@@ -345,7 +345,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Map<String, Integer> getNumbersWithMonthsByAssignee(Long id) {
-        List<Task> tasks = taskRepository.getAllByAssigneeIdAndStage(id, TaskStage.RELEASED);
+        List<Task> tasks = taskRepository.getAllByAssigneeIdAndStageOrderByDueTime(id, TaskStage.RELEASED);
 
         String[] months = {"Січень", "Лютий", "Березень", "Квітень", "Травень", "Червень", "Липень", "Серпень", "Вересень",
                 "Жовтень", "Листопад", "Грудень"};

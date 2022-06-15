@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/v1/tasks")
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "https://team-worker-client.herokuapp.com/")
 @Tag(name = "/api/v1/tasks", description = "Контролер для керування завданнями")
 public class TaskRestController {
 

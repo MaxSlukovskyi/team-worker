@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200/")
+@CrossOrigin(origins = "https://team-worker-client.herokuapp.com/")
 @RequestMapping(value = "/api/v1/manager/position")
 @Tag(name = "/api/v1/manager/position", description = "Контролер для керування посадами (manager)")
 public class PositionManagerRestController {
